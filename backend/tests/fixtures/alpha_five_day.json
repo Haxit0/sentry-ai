@@ -1,0 +1,10 @@
+{
+  "request": {"supplier_id": "SUP-ALPHA", "delay_days": 5},
+  "as_of_date": "2026-10-25",
+  "disrupted_restock_date": "2026-11-01",
+  "affected_order_ids": ["ORD-1002"],
+  "estimated_penalty_exposure_gbp": "500.00",
+  "ranked_strategies": ["expedite_shipping", "alternative_supplier", "accept_delay"],
+  "ranked_total_costs_gbp": ["160.00", "260.00", "500.00"],
+  "recommended_strategy": "expedite_shipping"
+}

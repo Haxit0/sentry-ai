@@ -1,0 +1,36 @@
+{
+  "as_of_date": "2026-10-25",
+  "suppliers": [
+    {
+      "supplier_id": "SUP-ALPHA", "name": "Alpha Components", "sku": "SKU-SENSOR",
+      "restock_date": "2026-10-27", "replenishment_quantity": 40,
+      "expedite": {"days_saved": 5, "capacity_units": 40, "fixed_fee_gbp": "100.00", "per_unit_fee_gbp": "3.00"},
+      "alternative": {"supplier_name": "Northstar Components", "lead_time_days": 2, "capacity_units": 20, "fixed_fee_gbp": "100.00", "unit_premium_gbp": "8.00"}
+    },
+    {
+      "supplier_id": "SUP-BETA", "name": "Beta Packaging", "sku": "SKU-CASING",
+      "restock_date": "2026-10-28", "replenishment_quantity": 30,
+      "expedite": {"days_saved": 3, "capacity_units": 15, "fixed_fee_gbp": "70.00", "per_unit_fee_gbp": "2.00"},
+      "alternative": {"supplier_name": "Westbridge Packaging", "lead_time_days": 3, "capacity_units": 10, "fixed_fee_gbp": "60.00", "unit_premium_gbp": "6.00"}
+    },
+    {
+      "supplier_id": "SUP-GAMMA", "name": "Gamma Electronics", "sku": "SKU-CONTROL",
+      "restock_date": "2026-10-29", "replenishment_quantity": 25,
+      "expedite": {"days_saved": 4, "capacity_units": 10, "fixed_fee_gbp": "90.00", "per_unit_fee_gbp": "4.00"},
+      "alternative": {"supplier_name": "Eastbank Electronics", "lead_time_days": 4, "capacity_units": 8, "fixed_fee_gbp": "80.00", "unit_premium_gbp": "7.00"}
+    }
+  ],
+  "orders": [
+    {"order_id": "ORD-1001", "customer_name": "Aster Robotics", "supplier_id": "SUP-ALPHA", "sku": "SKU-SENSOR", "quantity": 10, "promised_date": "2026-10-26", "penalty_per_day_gbp": "50.00"},
+    {"order_id": "ORD-1002", "customer_name": "Beacon Manufacturing", "supplier_id": "SUP-ALPHA", "sku": "SKU-SENSOR", "quantity": 20, "promised_date": "2026-10-27", "penalty_per_day_gbp": "100.00"},
+    {"order_id": "ORD-1003", "customer_name": "Cedar Devices", "supplier_id": "SUP-BETA", "sku": "SKU-CASING", "quantity": 12, "promised_date": "2026-10-29", "penalty_per_day_gbp": "45.00"},
+    {"order_id": "ORD-1004", "customer_name": "Delta Systems", "supplier_id": "SUP-BETA", "sku": "SKU-CASING", "quantity": 8, "promised_date": "2026-10-31", "penalty_per_day_gbp": "35.00"},
+    {"order_id": "ORD-1005", "customer_name": "Elm Instruments", "supplier_id": "SUP-GAMMA", "sku": "SKU-CONTROL", "quantity": 6, "promised_date": "2026-10-29", "penalty_per_day_gbp": "65.00"},
+    {"order_id": "ORD-1006", "customer_name": "Foundry Works", "supplier_id": "SUP-GAMMA", "sku": "SKU-CONTROL", "quantity": 10, "promised_date": "2026-10-30", "penalty_per_day_gbp": "55.00"}
+  ],
+  "inventory": [
+    {"sku": "SKU-SENSOR", "on_hand_units": 10},
+    {"sku": "SKU-CASING", "on_hand_units": 5},
+    {"sku": "SKU-CONTROL", "on_hand_units": 6}
+  ]
+}
