@@ -1,9 +1,12 @@
-"""Read-only repository boundary; future Zetaris data must map to these types."""
+"""Read-only repository boundary; Zetaris data maps to these same types."""
 
 from pathlib import Path
 from typing import Protocol
 
+from app.data.validation import validate_snapshot
 from app.schemas import DemoData
+
+FIXTURE_SOURCE = "backend/app/data/demo_data.json"
 
 
 class DataRepository(Protocol):
@@ -12,29 +15,18 @@ class DataRepository(Protocol):
         ...
 
 
+def evidence_source(repository: object, collection: str, record_id: str) -> str:
+    """Provenance label for one record. Repositories without their own labels are fixture-backed."""
+    label = getattr(repository, "evidence_source", None)
+    return label(collection, record_id) if callable(label) else f"{FIXTURE_SOURCE}#{collection}/{record_id}"
+
+
 class FixtureRepository:
     def __init__(self, path: Path | None = None) -> None:
         self._path = path or Path(__file__).with_name("demo_data.json")
 
     def snapshot(self) -> DemoData:
-        data = DemoData.model_validate_json(self._path.read_text(encoding="utf-8"))
-        supplier_ids = {item.supplier_id for item in data.suppliers}
-        skus = {item.sku for item in data.suppliers}
-        if len(supplier_ids) != len(data.suppliers) or len(skus) != len(data.suppliers):
-            raise ValueError("Fixture requires unique supplier IDs and one supplier per SKU")
-        if len({item.order_id for item in data.orders}) != len(data.orders):
-            raise ValueError("Duplicate order IDs in fixture")
-        if len({item.sku for item in data.inventory}) != len(data.inventory):
-            raise ValueError("Duplicate inventory SKU in fixture")
-        stock = {item.sku: item.on_hand_units for item in data.inventory}
-        suppliers = {item.supplier_id: item for item in data.suppliers}
-        for order in data.orders:
-            if order.supplier_id not in suppliers or order.sku != suppliers[order.supplier_id].sku:
-                raise ValueError(f"Invalid supplier/SKU relationship: {order.order_id}")
-        for supplier in data.suppliers:
-            if supplier.sku not in stock or supplier.restock_date < data.as_of_date:
-                raise ValueError(f"Missing inventory or past replenishment: {supplier.supplier_id}")
-            demand = sum(order.quantity for order in data.orders if order.supplier_id == supplier.supplier_id)
-            if demand > stock[supplier.sku] + supplier.replenishment_quantity:
-                raise ValueError(f"Insufficient scheduled replenishment: {supplier.supplier_id}")
-        return data
+        return validate_snapshot(DemoData.model_validate_json(self._path.read_text(encoding="utf-8")))
+
+    def evidence_source(self, collection: str, record_id: str) -> str:
+        return f"{FIXTURE_SOURCE}#{collection}/{record_id}"
