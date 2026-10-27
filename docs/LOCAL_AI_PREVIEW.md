@@ -51,9 +51,21 @@ No changes were pushed to GitHub by this integration task.
 Nightshift 1.2.7 responds to its official CLI status check. The catalogued
 Qwen2.5-Coder-3B-Instruct-Q4_K_M model was downloaded (1,929,903,360 bytes).
 The dedicated `sentry-qwen3b` lane uses an 8192-token context and one slot.
-Startup was refused by Nightshift with `admission_paused: memory pressure
-critical`; its report showed about 10 GB of swap in use. Resource protection
-was preserved. A real `POST /api/investigations` returned HTTP 503 because no
-model was serving. No successful live inference or validated AI report has
-been observed on this PC yet. Close unused heavy applications and start the
-local lane in Nightshift, then retry the dashboard investigation.
+Startup was initially refused because Windows lacked available commit memory.
+After unused applications were closed, normal startup succeeded without changing
+resource protections. The lane reports `ready` with full placement on CUDA0,
+the NVIDIA RTX 4080 Laptop GPU.
+
+Two real Alpha +5 investigations passed on 27 October 2026:
+
+- API run `inv-d840b7566c56`: HTTP 200 in 11 seconds, validated on the first
+  draft; expedite shipping GBP 160.00 against GBP 500.00 exposure. Two model
+  calls returned two signed receipts. H-MEM saved `mem-1`.
+- Dashboard run `inv-e1a5f7f2cb7b`: validated on the first draft; the same
+  calculated recommendation, two model calls and two signed receipts. H-MEM
+  recalled one prior finding and saved the new validated finding.
+
+Both reports identify `local-runtime/qwen2.5-coder-3b-instruct` as the model.
+The first full report is saved only in ignored `local_data/`.
+These are real inference and memory operations over synthetic fixture data;
+they do not verify live Zetaris integration or all possible scenarios.
