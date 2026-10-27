@@ -633,6 +633,52 @@ input[type="range"]::-moz-range-thumb {
   margin-top: 7px;
   line-height: 1.6;
 }
+.comparison-panel {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 25px;
+}
+.comparison-panel > .section-heading {
+  padding: 21px 24px;
+}
+.comparison-panel table {
+  min-width: 560px;
+}
+.comparison-panel th[scope="row"] {
+  background: #fff;
+  color: var(--ink);
+  font-size: 10px;
+  font-weight: 550;
+  letter-spacing: 0;
+  text-transform: none;
+  border: 0;
+  border-bottom: 1px solid #eef3eb;
+}
+.comparison-panel td {
+  font-size: 11px;
+}
+.comparison-panel .comparison-change {
+  color: var(--teal);
+  font-weight: 600;
+}
+.comparison-panel .table-scroll:focus-visible {
+  outline: 3px solid #79b8ee;
+  outline-offset: -3px;
+}
+.comparison-explanation {
+  padding: 17px 24px;
+  border-top: 1px solid var(--line);
+  background: #f8faf7;
+  color: #496a55;
+  font-size: 11px;
+  line-height: 1.8;
+  overflow-wrap: anywhere;
+}
+.comparison-explanation p + p {
+  margin-top: 7px;
+}
 .recovery-section {
   margin-bottom: 29px;
 }
