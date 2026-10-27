@@ -1,0 +1,31 @@
+# Vendored Meterless H-MEM Engine (reference implementation)
+
+`src/` is copied **unmodified** from the Apache-2.0 Meterless repository:
+
+- Upstream: https://github.com/Meterless/Meterless, path `engines/hmem/reference/src`
+- Commit: `1742dec56a66e58eef9dda2d2b865823758ca8cd` (2026-10-19)
+- Package: `@meterless/hmem-reference` 0.1.0 (`upstream-package.json`); licence in `LICENSE`
+
+It has zero runtime dependencies. Its only side effects are JSON writes (`state.json`,
+`ledger.jsonl`) inside the `persistDir` it is given; it makes no network calls and spawns no
+processes. Sentry AI runs it unchanged through `../hmem_bridge.mjs` and
+`app/integrations/hmem.py`; see `docs/METERLESS_INTEGRATION.md`.
+
+SHA-256 of the vendored files at import:
+
+```text
+432e8b86ed0b5883d435e5ab4a12160d1f40d194cbdb4c119d3b710cbb0301a3  src/conflictDetection.ts
+d12594d667ec068690c6b81e020cd62ade91671316a1ab9b529259304aceb009  src/dreaming.ts
+89433327ee1075a8049bc8518cdf5cabf51ad67802e192266841cdee727b6d10  src/embeddings.ts
+9c481889afcdd70086d3bb3470842fa2330215e4d7760d826d103accdf8c1cdf  src/index.ts
+6072693d654ea1c34a9adbf6ce80101eeb1eeb56273d264f6ceb4859ffde6562  src/memoryMining.ts
+4fe120b1b64fe7225b9b28fda59514c114de9e885d22c5bf0aa035788b6d629d  src/memoryRetrieval.ts
+a1eac8de8c0fde0e503e1212f3cb98295a661c2a8bad93ad82e51985885e6fd0  src/memoryStore.ts
+3ce0d4f3233d0ad7c133a2cbaf39b6122467022e0aa378a160a0d463e2264cef  src/sleepCycle.ts
+263253dd3342c488ce773d7e728d77aec983c1833873602b59ce1a6c7999e20e  src/trustLedger.ts
+becb504870a67646a20a421ffe04d8732db63418393423d2186c074b182f54c7  src/types.ts
+```
+
+Verify with `cd backend/engines/hmem && sha256sum -c` against the block above. To update, copy a
+newer upstream `reference/src`, refresh the commit and hashes here, and rerun
+`tests/test_meterless.py`.
