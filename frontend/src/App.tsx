@@ -1,30 +1,18 @@
 import { useEffect, useRef, useState } from "react";
 import type { CSSProperties, FormEvent, ReactNode } from "react";
 import { request } from "./api";
-import type { Health, Order, Simulation, Strategy, Supplier } from "./types";
+import ComparisonSummary from "./ComparisonSummary";
+import InvestigationPanel from "./InvestigationPanel";
+import { deliveryChange, runComparison } from "./comparison";
+import type { SimulationComparison } from "./comparison";
+import { date, money, strategyLabels as labels } from "./format";
+import type { Health, Order, Strategy, Supplier } from "./types";
 
-const labels: Record<Strategy, string> = {
-  accept_delay: "Accept the delay",
-  expedite_shipping: "Expedite shipping",
-  alternative_supplier: "Alternative supplier",
-};
 const descriptions: Record<Strategy, string> = {
   accept_delay: "Keep the existing supply plan",
   expedite_shipping: "Bring available supply forward",
   alternative_supplier: "Source from a backup supplier",
 };
-const money = (value: string | number) =>
-  new Intl.NumberFormat("en-GB", {
-    style: "currency",
-    currency: "GBP",
-    maximumFractionDigits: Number(value) % 1 === 0 ? 0 : 2,
-  }).format(Number(value));
-const date = (value: string) =>
-  new Intl.DateTimeFormat("en-GB", {
-    day: "numeric",
-    month: "short",
-    timeZone: "UTC",
-  }).format(new Date(`${value}T00:00:00Z`));
 
 function Icon({
   name,
@@ -108,10 +96,14 @@ function App() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [supplierId, setSupplierId] = useState("");
   const [delay, setDelay] = useState(5);
-  const [result, setResult] = useState<Simulation | null>(null);
+  const [comparison, setComparison] = useState<SimulationComparison | null>(
+    null,
+  );
+  const result = comparison?.disrupted ?? null;
   const [initializing, setInitializing] = useState(true);
   const [running, setRunning] = useState(false);
   const [error, setError] = useState("");
+  const [runFailed, setRunFailed] = useState(false);
   const [reload, setReload] = useState(0);
   const activeRun = useRef<AbortController | null>(null);
 
@@ -147,6 +139,7 @@ function App() {
     return () => {
       controller.abort();
       activeRun.current?.abort();
+      activeRun.current = null;
     };
   }, [reload]);
 
@@ -174,29 +167,35 @@ function App() {
 
   async function runSimulation(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!supplierId || running) return;
-    activeRun.current?.abort();
+    if (!supplierId || activeRun.current) return;
     const controller = new AbortController();
     activeRun.current = controller;
     setRunning(true);
     setError("");
+    setRunFailed(false);
     try {
-      const response = await request<Simulation>("/api/simulations", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ supplier_id: supplierId, delay_days: delay }),
-        signal: controller.signal,
-      });
-      if (!controller.signal.aborted) setResult(response);
+      const response = await runComparison(
+        supplierId,
+        delay,
+        controller.signal,
+      );
+      if (!controller.signal.aborted) setComparison(response);
     } catch (failure) {
-      if (!controller.signal.aborted)
+      if (!controller.signal.aborted) {
+        setRunFailed(true);
         setError(
           failure instanceof Error
             ? failure.message
-            : "Simulation failed. Please try again.",
+            : "Comparison failed. Please try again.",
         );
+        // Cancel the other request if only one half of the comparison failed.
+        controller.abort();
+      }
     } finally {
-      if (!controller.signal.aborted) setRunning(false);
+      if (activeRun.current === controller) {
+        activeRun.current = null;
+        setRunning(false);
+      }
     }
   }
 
@@ -395,8 +394,10 @@ function App() {
             </div>
           )}
 
+          <InvestigationPanel supplierId={supplierId} delayDays={delay} />
+
           <div aria-live="polite" aria-busy={running}>
-            {result && best ? (
+            {comparison && result && best ? (
               <>
                 <div className="results-heading">
                   <div className="heading-inline">
@@ -408,24 +409,33 @@ function App() {
                     </span>
                   </div>
                   <span
-                    className={`run-state ${stale || running ? "pending" : ""}`}
+                    className={`run-state ${stale || running || runFailed ? "pending" : ""}`}
                   >
                     <span />
                     {running
-                      ? "Calculating new scenario"
-                      : stale
-                        ? "Inputs changed · run to update"
-                        : "Simulation complete"}
+                      ? "Comparing scenarios"
+                      : runFailed
+                        ? "Update failed · showing previous results"
+                        : stale
+                          ? "Inputs changed · run to update"
+                          : "Simulation complete"}
                   </span>
                 </div>
-                {(stale || running) && (
+                {(stale || running || runFailed) && (
                   <p className="stale-notice">
-                    The results below show the last completed scenario:{" "}
+                    The results below show the last completed comparison:{" "}
                     {result.supplier_id}, {result.delay_days} days of delay.
                   </p>
                 )}
+                <div
+                  className={
+                    stale || running || runFailed ? "previous-results" : ""
+                  }
+                >
+                  <ComparisonSummary {...comparison} />
+                </div>
                 <section
-                  className={`summary-grid ${stale || running ? "previous-results" : ""}`}
+                  className={`summary-grid ${stale || running || runFailed ? "previous-results" : ""}`}
                   aria-label="Financial impact summary"
                 >
                   <div className="summary-card exposure">
@@ -502,7 +512,7 @@ function App() {
                             ) : (
                               <span className="strategy-type">
                                 {option.strategy === "accept_delay"
-                                  ? "BASELINE"
+                                  ? "NO ACTION"
                                   : "RECOVERY OPTION"}
                               </span>
                             )}
@@ -563,7 +573,9 @@ function App() {
                       </h2>
                       <p className="section-description">
                         Late orders after available inventory is allocated to
-                        the earliest promises.
+                        the earliest promises. Exact completion dates are
+                        returned only for late orders; other baseline deliveries
+                        are shown as on time by their promised date.
                       </p>
                     </div>
                     <span className="subtle">
@@ -574,48 +586,69 @@ function App() {
                     <div className="table-scroll">
                       <table>
                         <caption className="sr-only">
-                          Affected orders before recovery, including quantities,
-                          delivery dates and estimated penalties
+                          Affected orders before recovery, comparing baseline
+                          and disrupted delivery dates and estimated penalties
                         </caption>
                         <thead>
                           <tr>
                             <th>Customer / order</th>
                             <th>Quantity / stock</th>
                             <th>Promised</th>
-                            <th>Expected</th>
-                            <th>Delay</th>
+                            <th>Baseline delivery</th>
+                            <th>Disrupted delivery</th>
+                            <th>Delivery impact</th>
                             <th className="numeric">Penalty</th>
                           </tr>
                         </thead>
                         <tbody>
-                          {result.affected_orders.map((order) => (
-                            <tr key={order.order_id}>
-                              <td>
-                                <strong>{order.customer_name}</strong>
-                                <span>
-                                  {order.order_id} · {order.sku}
-                                </span>
-                              </td>
-                              <td>
-                                <strong>{order.quantity} units</strong>
-                                <span>
-                                  {order.inventory_allocated} allocated ·{" "}
-                                  {order.shortfall_units} short
-                                </span>
-                              </td>
-                              <td>{date(order.promised_date)}</td>
-                              <td>{date(order.expected_delivery_date)}</td>
-                              <td>
-                                <span className="delay-chip">
-                                  +{order.delay_days}{" "}
-                                  {order.delay_days === 1 ? "day" : "days"}
-                                </span>
-                              </td>
-                              <td className="numeric penalty-cell">
-                                {money(order.estimated_penalty_gbp)}
-                              </td>
-                            </tr>
-                          ))}
+                          {result.affected_orders.map((order) => {
+                            const baselineOrder =
+                              comparison.baseline.affected_orders.find(
+                                (item) => item.order_id === order.order_id,
+                              );
+                            return (
+                              <tr key={order.order_id}>
+                                <td>
+                                  <strong>{order.customer_name}</strong>
+                                  <span>
+                                    {order.order_id} · {order.sku}
+                                  </span>
+                                </td>
+                                <td>
+                                  <strong>{order.quantity} units</strong>
+                                  <span>
+                                    {order.inventory_allocated} allocated ·{" "}
+                                    {order.shortfall_units} short
+                                  </span>
+                                </td>
+                                <td>{date(order.promised_date)}</td>
+                                <td>
+                                  {baselineOrder
+                                    ? date(baselineOrder.expected_delivery_date)
+                                    : `On time by ${date(order.promised_date)}`}
+                                </td>
+                                <td>{date(order.expected_delivery_date)}</td>
+                                <td>
+                                  <span className="delay-chip">
+                                    {baselineOrder
+                                      ? deliveryChange(
+                                          baselineOrder.expected_delivery_date,
+                                          order.expected_delivery_date,
+                                        )
+                                      : "Newly late"}
+                                  </span>
+                                  <span>
+                                    {order.delay_days}{" "}
+                                    {order.delay_days === 1 ? "day" : "days"}{" "}
+                                    past promise
+                                  </span>
+                                </td>
+                                <td className="numeric penalty-cell">
+                                  {money(order.estimated_penalty_gbp)}
+                                </td>
+                              </tr>
+                            );
+                          })}
                         </tbody>
                       </table>
                     </div>
@@ -670,7 +703,8 @@ function App() {
                     <p>
                       {result.disclaimer} Execution mode:{" "}
                       {result.execution_mode}. Agent status:{" "}
-                      {result.agent_status}.
+                      {result.agent_status}. This status describes the calculated
+                      simulation; AI investigation results are shown separately above.
                     </p>
                   </div>
                 </section>
@@ -682,7 +716,11 @@ function App() {
                   <span className="orbit-dot" />
                 </div>
                 <span className="eyebrow">READY WHEN YOU ARE</span>
-                <h2>Test a disruption. Find a way forward.</h2>
+                <h2>
+                  {running
+                    ? "Comparing baseline and disruption…"
+                    : "Test a disruption. Find a way forward."}
+                </h2>
                 <p>
                   Choose a supplier and a delay, then run your first scenario.
                   <br />
@@ -703,10 +741,10 @@ function App() {
           <footer className="footer">
             <p>
               <span className="footer-dot" />
-              Synthetic fixture data only. Zetaris, Meterless Nightshift,
-              Meterless Engine and NVIDIA integrations are pending.
+              Synthetic fixture data only. Simulator calculations and optional Nightshift
+              AI investigations are separate. AI requires local runtime configuration.
             </p>
-            <span>Deterministic simulator · v0.1</span>
+            <span>Simulator + AI investigation · local preview</span>
           </footer>
         </div>
       </main>

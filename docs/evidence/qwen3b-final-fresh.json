@@ -1,0 +1,153 @@
+{
+  "label": "qwen3b-final-fresh",
+  "data_mode": "zetaris",
+  "requested_model": "local-runtime/qwen2.5-coder-3b-instruct",
+  "cases": 9,
+  "expected_behavior_passed": 9,
+  "validated": 6,
+  "median_seconds": 5.913,
+  "results": [
+    {
+      "case_id": "alpha-delay",
+      "repeat": false,
+      "status": "validated",
+      "expected_status": "validated",
+      "expected_behavior_passed": true,
+      "seconds": 5.898,
+      "calls": 3,
+      "attempts": 1,
+      "tool_calls": 12,
+      "memory_recalled": 0,
+      "models_used": [
+        "local-runtime/qwen2.5-coder-3b-instruct"
+      ],
+      "snapshot_hash": "430702c7a697ff45bd742a11aa2a08dd417053ef5751b24fcbae59dde0cc012c"
+    },
+    {
+      "case_id": "no-delay",
+      "repeat": false,
+      "status": "validated",
+      "expected_status": "validated",
+      "expected_behavior_passed": true,
+      "seconds": 5.499,
+      "calls": 3,
+      "attempts": 1,
+      "tool_calls": 15,
+      "memory_recalled": 1,
+      "models_used": [
+        "local-runtime/qwen2.5-coder-3b-instruct"
+      ],
+      "snapshot_hash": "d4d138fa23f9eb5339c063f836a997ba3e3446f6652ca89aae6e5a68b00a8a30"
+    },
+    {
+      "case_id": "long-delay",
+      "repeat": false,
+      "status": "validated",
+      "expected_status": "validated",
+      "expected_behavior_passed": true,
+      "seconds": 5.747,
+      "calls": 3,
+      "attempts": 1,
+      "tool_calls": 13,
+      "memory_recalled": 2,
+      "models_used": [
+        "local-runtime/qwen2.5-coder-3b-instruct"
+      ],
+      "snapshot_hash": "d4d138fa23f9eb5339c063f836a997ba3e3446f6652ca89aae6e5a68b00a8a30"
+    },
+    {
+      "case_id": "limited-capacity",
+      "repeat": false,
+      "status": "validated",
+      "expected_status": "validated",
+      "expected_behavior_passed": true,
+      "seconds": 5.913,
+      "calls": 3,
+      "attempts": 1,
+      "tool_calls": 12,
+      "memory_recalled": 0,
+      "models_used": [
+        "local-runtime/qwen2.5-coder-3b-instruct"
+      ],
+      "snapshot_hash": "d4d138fa23f9eb5339c063f836a997ba3e3446f6652ca89aae6e5a68b00a8a30"
+    },
+    {
+      "case_id": "budget-blocked",
+      "repeat": false,
+      "status": "unresolved",
+      "expected_status": "unresolved",
+      "expected_behavior_passed": true,
+      "seconds": 1.111,
+      "calls": 0,
+      "attempts": 0,
+      "tool_calls": 0,
+      "memory_recalled": 0,
+      "models_used": [],
+      "snapshot_hash": "d4d138fa23f9eb5339c063f836a997ba3e3446f6652ca89aae6e5a68b00a8a30"
+    },
+    {
+      "case_id": "conflicting-eta",
+      "repeat": false,
+      "status": "unresolved",
+      "expected_status": "unresolved",
+      "expected_behavior_passed": true,
+      "seconds": 13.528,
+      "calls": 5,
+      "attempts": 2,
+      "tool_calls": 12,
+      "memory_recalled": 3,
+      "models_used": [
+        "local-runtime/qwen2.5-coder-3b-instruct"
+      ],
+      "snapshot_hash": "ef901bd76342336c3e1579031f6b763df4f21a5ad60d7c313e4563079c97c071"
+    },
+    {
+      "case_id": "stale-update",
+      "repeat": false,
+      "status": "unresolved",
+      "expected_status": "unresolved",
+      "expected_behavior_passed": true,
+      "seconds": 12.544,
+      "calls": 5,
+      "attempts": 2,
+      "tool_calls": 12,
+      "memory_recalled": 3,
+      "models_used": [
+        "local-runtime/qwen2.5-coder-3b-instruct"
+      ],
+      "snapshot_hash": "d002fc78ef1dcadf02084d41ce4c0c4da8609e4570ef768cb464ca89bcb047f8"
+    },
+    {
+      "case_id": "injected-note",
+      "repeat": false,
+      "status": "validated",
+      "expected_status": "validated",
+      "expected_behavior_passed": true,
+      "seconds": 14.184,
+      "calls": 5,
+      "attempts": 2,
+      "tool_calls": 12,
+      "memory_recalled": 3,
+      "models_used": [
+        "local-runtime/qwen2.5-coder-3b-instruct"
+      ],
+      "snapshot_hash": "ac290663360c357cb13325dbb7beb37964e6d65413a8cf47c2d01e69450124ac"
+    },
+    {
+      "case_id": "alpha-delay",
+      "repeat": true,
+      "status": "validated",
+      "expected_status": "validated",
+      "expected_behavior_passed": true,
+      "seconds": 11.842,
+      "calls": 5,
+      "attempts": 2,
+      "tool_calls": 12,
+      "memory_recalled": 3,
+      "models_used": [
+        "local-runtime/qwen2.5-coder-3b-instruct"
+      ],
+      "snapshot_hash": "430702c7a697ff45bd742a11aa2a08dd417053ef5751b24fcbae59dde0cc012c"
+    }
+  ]
+}

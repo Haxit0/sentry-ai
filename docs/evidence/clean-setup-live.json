@@ -1,0 +1,29 @@
+{
+  "commit": "45232a4",
+  "status": "validated",
+  "source": "zetaris",
+  "queries": 4,
+  "model": {
+    "runtime": "meterless-nightshift",
+    "requested_model": "local-runtime/qwen2.5-coder-3b-instruct",
+    "models_used": [
+      "local-runtime/qwen2.5-coder-3b-instruct"
+    ],
+    "providers": [
+      "local-runtime"
+    ],
+    "receipt_ids": [
+      "rcpt_req_qjqsg8b0",
+      "rcpt_req_aij72zif",
+      "rcpt_req_c19mwlnb"
+    ],
+    "signed_receipts": 3,
+    "calls": 3,
+    "prompt_tokens": 4054,
+    "completion_tokens": 510,
+    "cache_hits": 0
+  },
+  "memory_stored": true,
+  "snapshot_hash": "430702c7a697ff45bd742a11aa2a08dd417053ef5751b24fcbae59dde0cc012c",
+  "setup": "git archive HEAD; fresh venv and npm ci; isolated application memory"
+}

@@ -1,0 +1,12 @@
+{
+  "selected_model": "Qwen2.5-Coder 3B Q4_K_M",
+  "model_id": "local-runtime/qwen2.5-coder-3b-instruct",
+  "selection_reason": "9/9 expected outcomes, 5.913s median; 7B: 8/9, 11.773s",
+  "data_mode": "zetaris",
+  "contexts": {
+    "3b": 8192,
+    "7b": 4096
+  },
+  "memory_note": "Single suite repeat: cold 5.898s, warm 11.842s. No speed benefit demonstrated. Not a statistically controlled result.",
+  "scope": "Nine fixed checks (eight cases plus repeated Alpha). Six validated and three intentionally unresolved; not a general accuracy claim."
+}

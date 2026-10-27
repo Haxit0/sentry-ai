@@ -1,154 +1,87 @@
-# Sentry AI — Open Agent Hackathon 2026
+# Sentry AI
 
-Track 2: **The Agent That Can Explain Why**
+**When a supplier slips, know why the recovery choice makes sense, and what would change it.**
 
-Sentry AI investigates supply-chain disruptions, estimates order impact and compares recovery strategies. This shared starter is a deterministic **synthetic-data What-If simulator**, not yet an autonomous agent. No external orders or systems are modified.
+Open Agent Hackathon 2026 · Track 2: The Agent That Can Explain Why.
 
-Select a supplier, introduce a delay, and compare accepting the delay, expediting shipping, or buying from an alternative supplier. The application allocates inventory by promised date, calculates hypothetical late-delivery penalties, ranks recovery options and returns evidence for its recommendation.
+Sentry helps supply-chain operations managers investigate delayed suppliers, compare recovery choices and produce reviewable decision packets. Zetaris federates PostgreSQL orders and CSV supplier, inventory and carrier records. Nightshift-powered agents investigate and challenge evidence. Exact financial checks block unsupported claims. Meterless H-MEM retains validated findings.
 
-## Working baseline and architecture
+The business records are **synthetic**. Real connectors and real model calls do not turn them into customer data. Recommendations never execute purchases, shipments or customer changes.
 
-- Python 3.11+, FastAPI and Pydantic API on port **8000**.
-- React, TypeScript and Vite dashboard on strict port **5173**.
-- Three synthetic suppliers, six orders and three inventory SKUs.
-- Fixed evaluation date **2026-10-25**; exact Python financial arithmetic, without an LLM.
-- Typed API, provenance, validation, pytest suite and GitHub Actions.
-- Explicit `fixture` execution mode and `not_configured` integration/agent status.
+## Demonstration
 
-The known-answer scenario is `SUP-ALPHA` delayed five days: **£500.00** penalty exposure; **£160.00** expedited shipping is cheapest, saving **£340.00** against no action.
+Alpha Components is five days late. Stock covers the first order, leaving ORD-1002 exposed to **GBP 500.00** in penalties. Expedited recovery totals **GBP 160.00**, versus **GBP 260.00** for alternative sourcing, a hypothetical **GBP 340.00** saving against no action.
 
-```text
-React dashboard → Vite /api proxy → FastAPI → simulation service → fixture repository
-                                                ↓
-                                     evidence + ranked costs
+At seven days, alternative sourcing becomes cheaper. A GBP 50 action budget and zero remaining lateness leave no feasible recovery. Conflicting arrival reports cause Sentry to withhold a firm AI recommendation and ask for confirmation.
 
-Future: Zetaris data; Meterless Nightshift inference + an actual Meterless Engine
-```
+## Agent collaboration
 
-Read [architecture](docs/ARCHITECTURE.md), [the frozen contract](docs/CONTRACT.md), [ownership](docs/OWNERSHIP.md) and [the demo plan](docs/DEMO_PLAN.md) before coding.
+The Planner chooses evidence questions. The Investigator runs server-bound tools and drafts an evidence-cited explanation. A Nightshift Critic challenges unsupported claims. The deterministic Evaluator retains final veto over money, order IDs and citations. Missing evidence returns to the Planner for revised tasks. Rejected drafts, actual feedback and tool results remain in the trace.
+
+H-MEM findings are historical context. Every current cost is recalculated. Only validated findings enter memory. Each snapshot records acquisition timestamps, query IDs, row counts and a SHA-256 content hash. The acquisition window is not an atomic transaction across sources.
+
+One worker processes investigations, with two queued jobs maximum. Each run has three draft attempts, eight model calls, 32 tool calls and a 120-second processing budget. Cancellation is cooperative. Human review records approval, revision or deferral without executing an action.
+
+## Sponsor and development-tool disclosure
+
+| Technology | Actual role |
+| --- | --- |
+| Zetaris | Read-only federation, including a PostgreSQL/CSV cross-source join and an additional carrier/supplier update source. |
+| Meterless Nightshift | Primary and only AI-provider path for Planner, Investigator and Critic calls, with returned model and receipt metadata. |
+| Meterless H-MEM | Unmodified Apache-2.0 reference engine pinned at `1742dec56a66e58eef9dda2d2b865823758ca8cd`, used for persistent recall, feedback, conflict detection and its trust ledger. |
+| NVIDIA | Local Qwen inference accelerated by CUDA on an RTX 4080 Laptop GPU. No Nemotron or hosted NVIDIA API claim. |
+| Coding tools | This integration used OpenAI Codex and VS Code. Cursor usage by teammates is unconfirmed and is not claimed. |
+
+The deterministic Evaluator is application code, not another model pretending to verify arithmetic. Source text and memories are untrusted data and cannot authorize commands or unrestricted SQL. See [component disclosure](docs/PROJECT_DESCRIPTION.md).
 
 ## Install and run
 
-Requirements: Git, **Python 3.11+**, **Node.js 22.12+** and npm. The fixture baseline needs no running Zetaris, Docker, WSL2, Nightshift, model download or credentials. Setup does not reconfigure those installations.
-
-```bash
-git clone https://github.com/Haxit0/sentry-ai.git
-cd sentry-ai
-```
-
-macOS/Linux, or an already configured WSL shell, from the repository root:
-
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-python -m pip install -r backend/requirements.txt
-cd backend
-python -m uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
-```
-
-Windows PowerShell, from the repository root:
+Requires Python 3.11+, Node 24, npm and Git. From the repository root in PowerShell:
 
 ```powershell
 py -3 -m venv .venv
-.\.venv\Scripts\python.exe -m pip install -r backend\requirements.txt
-Set-Location backend
-..\.venv\Scripts\python.exe -m uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
-```
-
-In a **second terminal**, from the repository root:
-
-```bash
-cd frontend
+.\.venv\Scripts\python.exe -m pip install -r backend/requirements.txt
+Set-Location frontend
 npm ci
 npm run dev
 ```
 
-Open [the dashboard](http://localhost:5173) and [interactive API documentation](http://localhost:8000/docs). Vite forwards `/api` to `127.0.0.1:8000`; keep both processes running. Port 3000 is reserved for the existing Zetaris setup. If port 5173 is occupied, Vite reports an error instead of silently selecting another port.
-
-`.env.example` documents optional public frontend configuration and future integration settings. The baseline needs no `.env`. Vite can read root `VITE_API_BASE_URL` as a public backend origin; its blank default uses the dev proxy. Never put credentials in `VITE_` variables. The fixture backend does not read integration credentials or activate an adapter merely because settings exist. Never commit `.env`.
-
-`npm run preview` serves the built frontend on 5173. A static deployment needs a reverse proxy for `/api` or an appropriate public `VITE_API_BASE_URL` at build time, plus backend CORS configuration for its actual origin. The two-terminal development setup above includes the proxy already.
-
-## Tests and checks
-
-With the repository virtual environment active:
-
-```bash
-cd backend
-python -m pytest -q
-```
-
-PowerShell without activation, from the repository root:
+In a second terminal, from the repository root:
 
 ```powershell
 Set-Location backend
-..\.venv\Scripts\python.exe -m pytest -q
+..\.venv\Scripts\python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8000
 ```
 
-From `frontend`:
+Open http://127.0.0.1:5173/ and API docs at http://127.0.0.1:8000/docs. Linux/macOS use `python3`, `.venv/bin/python` and the same npm commands. Run one backend worker. The original fixture simulator is available at `/legacy`; its v1 API remains unchanged. The enhanced workbench uses `/api/v2`.
 
-```bash
-npm run typecheck
-npm run build
-```
+### Sponsor configuration
 
-Smoke-test the running API:
+Copy `.env.example` to `.env` and set values privately. Fixture mode needs no data credentials. AI investigations require Nightshift and a serving local model. Configure `METERLESS_BASE_URL`, `METERLESS_TOKEN_FILE`, `METERLESS_MODEL` and a private `SENTRY_HMEM_DIR`.
 
-```bash
-curl http://127.0.0.1:8000/api/health
-curl -X POST http://127.0.0.1:8000/api/simulations \
-  -H 'Content-Type: application/json' \
-  -d '{"supplier_id":"SUP-ALPHA","delay_days":5}'
-```
+For live data, start the supplied Zetaris stack without resetting volumes, set `ZETARIS_BASE_URL`, `ZETARIS_ORG_ID`, `ZETARIS_API_TOKEN` and `SENTRY_DATA_MODE=zetaris`. A live failure never silently substitutes fixtures. On the existing Windows setup, run `python -m scripts.bootstrap_local_zetaris` from `backend` with the project venv. This seeds namespaced demonstration objects and creates an expiring application key using the saved administrator configuration privately. See [Zetaris details](docs/ZETARIS_INTEGRATION.md).
 
-PowerShell equivalent:
+The local demo key belongs to the administrator account; application SQL is read-only/allowlisted, but production requires separately scoped service credentials. Never commit `.env`, tokens, local databases or model files, and never put credentials in `VITE_` variables. Respect runtime admission failures instead of disabling memory protections.
 
-```powershell
-Invoke-RestMethod http://127.0.0.1:8000/api/health
-Invoke-RestMethod http://127.0.0.1:8000/api/simulations -Method Post -ContentType application/json -Body '{"supplier_id":"SUP-ALPHA","delay_days":5}'
-```
+## Verification
 
-GitHub Actions runs backend tests and frontend checks on pushes and pull requests. Inspect the current commit's actual workflow results; a workflow file alone is not proof that checks passed.
+From `backend`, run `python -m pytest -q` with the repository venv. From `frontend`, run `npm run build`, `npx playwright install chromium` and `npm run test:e2e`. CI pins Node for real H-MEM tests and runs browser checks.
 
-The shared baseline passed 40 backend tests and the frontend production build locally. See [the executed verification record](docs/VERIFICATION.md) for versions, live API/browser checks and limitations.
+Live tests are opt-in with `ZETARIS_LIVE_TESTS=1` and `AGENT_LIVE_TESTS=1`. To measure a real model, run `python -m scripts.evaluate_submission --label unique-run-name --model local-runtime/qwen2.5-coder-3b-instruct` from `backend`. Each evaluation gets independent H-MEM storage and retains failures in its denominator.
 
-## Dataset and financial assumptions
+See [readiness and executed evidence](docs/SUBMISSION_READINESS.md), [API v2](docs/API_V2.md) and [the narration/shot list](docs/DEMO_SCRIPT.md).
 
-All records and costs in `backend/app/data/demo_data.json` are hypothetical. Each order contains one SKU. On-hand stock goes to the earliest promised order first. An order completes only when all units arrive; uncovered units wait for the supplier's replenishment. Partial intervention capacity does not magically complete an order. Penalties are a flat daily fee per whole late order, not a fee per unit.
+## Assumptions and limits
 
-Estimated cost is **residual penalties + incremental recovery fees**. Regular procurement costs are common to the options and excluded. Alternative sourcing includes its configured premium. Exposure is not revenue loss, and a simulated recommendation does not execute a real purchase or shipment. See [the calculation assumptions](docs/ARCHITECTURE.md).
+- Three primary suppliers, six one-SKU orders and three inventory records, with fictional GBP fees and a fixed evaluation date of 25 October 2026.
+- FIFO allocation by promise date/order ID, and whole-order completion. Costs are incremental fees plus residual penalties. Transit, split delivery, taxes, cancellation and regular procurement are excluded.
+- Best among three fixed policies, not global supply-chain optimization. Arrival ranges are source claims, not calibrated probabilities.
+- SQLite and H-MEM support one local demonstration workspace, not public multi-user tenancy.
+- Nightshift receipt signature fields are counted but not independently cryptographically verified.
+- A model may fail or exhaust its budget. No accepted recommendation is released in that case.
 
-## Three-person collaboration
+## Submission
 
-| Developer | Branch | Primary scope |
-| --- | --- | --- |
-| 1 | `feature/zetaris-data` | Data repository, Zetaris, source validation and provenance |
-| 2 | `feature/agent-recovery` | Recovery, Nightshift, agents and a real Meterless Engine |
-| 3 | `feature/whatif-dashboard` | React dashboard, What-If controls, evidence UX and demo |
+The application guides users through Choose a problem → Check options → Your answer. One screen is shown at a time; charts and evidence are optional. See the [guided UX verification](docs/GUIDED_UX.md).
 
-After cloning, select your branch and pull its published shared baseline:
-
-```bash
-git fetch origin
-git switch feature/zetaris-data # substitute your assigned branch
-git pull --ff-only
-```
-
-For work already started, commit or stash your own changes, fetch, then merge `origin/main` deliberately. Do not reset teammates' changes or force-push. Open PRs to `main`, request a teammate review and run checks before merging. **Agree as a team before changing the frozen API** in `docs/CONTRACT.md` and `backend/app/schemas.py`. See [ownership and merge rules](docs/OWNERSHIP.md).
-
-This repository is private. Add teammates under GitHub **Settings → Collaborators** if they cannot clone it. Never commit secrets, virtual environments, `node_modules`, model weights, downloaded data or installation files.
-
-## Planned sponsor integrations
-
-- **Zetaris — pending:** authenticated read-only federation across at least two real sources with provenance and explicit failures. See [issue #1](https://github.com/Haxit0/sentry-ai/issues/1).
-- **Meterless Nightshift — pending:** real model discovery/inference and Planner, Investigator and Evaluator agents with evidence validation. See [issue #2](https://github.com/Haxit0/sentry-ai/issues/2).
-- **Meterless Engine — pending:** at least one working Engine used in the workflow and demonstrated with reproducible tests. Provider configuration alone does not satisfy this.
-- **NVIDIA Nemotron — not connected:** consider it after a real inference path works; do not claim its use without a model receipt proving it.
-- **Dashboard evolution — pending:** richer evidence and actual execution traces when agents exist. See [issue #3](https://github.com/Haxit0/sentry-ai/issues/3).
-- Use Claude Code, Cursor or the team's preferred tools, and record development tools and pre-existing components honestly.
-
-Adapter placeholders report `not_configured`; they never fabricate success or silently substitute fixtures on a live integration failure.
-
-## Submission planning
-
-[Issue #4](https://github.com/Haxit0/sentry-ai/issues/4) records the team's target as **27 October 2026, 23:45 UTC**. Verify the deadline and requirements in the official event portal. Prepare the repository, a real 1–4 minute video, slides, sponsor explanation and pre-existing components disclosure. Sponsor integrations and autonomous investigation remain implementation work.
+The final narrated MP4 follows the UI pass. Add video and deck URLs after upload and anonymous-access verification. Confirm the team roster, repository access and disclosure text before the final HackOS submission. The working cutoff is **27 October 2026, 23:45 UTC**. No customer savings, production deployment or unexecuted tests are claimed.

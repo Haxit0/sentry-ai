@@ -1,0 +1,43 @@
+{
+  "runs": [
+    {
+      "pair": 0,
+      "condition": "cold",
+      "seconds": 6.166,
+      "status": "validated",
+      "calls": 3,
+      "cache_hits": 0,
+      "recalled": 0
+    },
+    {
+      "pair": 0,
+      "condition": "warm",
+      "seconds": 6.542,
+      "status": "validated",
+      "calls": 3,
+      "cache_hits": 0,
+      "recalled": 1
+    },
+    {
+      "pair": 1,
+      "condition": "cold",
+      "seconds": 5.751,
+      "status": "validated",
+      "calls": 3,
+      "cache_hits": 0,
+      "recalled": 0
+    },
+    {
+      "pair": 1,
+      "condition": "warm",
+      "seconds": 6.607,
+      "status": "validated",
+      "calls": 3,
+      "cache_hits": 0,
+      "recalled": 1
+    }
+  ],
+  "cold_median_seconds": 5.958500000000001,
+  "warm_median_seconds": 6.5745000000000005,
+  "limitation": "Two immediate matched pairs, fixed Alpha case, fresh inference scopes. Too small for a general speed claim."
+}
