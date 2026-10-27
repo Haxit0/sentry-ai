@@ -144,8 +144,9 @@ tags: supplier:SUP-ALPHA, sku:SKU-SENSOR, strategy:expedite_shipping, delay:5   
 
 `tests/test_meterless.py`: provenance and ledger, the selective recall threshold, rejection of records without a
 source, conflict detection, and persistence across engine processes. `tests/test_agent.py`: recall shapes the plan,
-stale figures are rejected, and feedback reflects outcomes. These tests skip only when Node 22.7+ is unavailable. The
-backend CI job currently runs no Node setup step, so in CI they skip unless one is added.
+stale figures are rejected, and feedback reflects outcomes. These tests skip only when Node 22.7+ is unavailable. They
+do run in GitHub Actions: the runner's preinstalled Node supports the flag, and the PR #7 runs report 102 passed,
+3 skipped, the same as locally. Pinning `actions/setup-node` in the backend job would make that explicit.
 
 ## Configuration
 
