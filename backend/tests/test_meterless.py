@@ -82,6 +82,22 @@ def test_model_discovery_lists_routing_ids() -> None:
         assert nightshift.models() == ["meterless/local", "meterless/auto"]
 
 
+def test_fresh_inference_isolates_each_corrected_request_from_semantic_cache() -> None:
+    from dataclasses import replace
+    scopes = []
+
+    def handler(request):
+        scopes.append(request.headers.get("meterless-scope"))
+        return httpx.Response(200, json={**COMPLETION, "meterless": {**COMPLETION["meterless"], "from_cache": True}})
+
+    with NightshiftClient(replace(CONFIG, fresh_inference=True), transport=httpx.MockTransport(handler)) as model:
+        first = model.chat([{"role": "user", "content": "draft"}])
+        model.chat([{"role": "user", "content": "correct the draft"}])
+    assert first.from_cache is True
+    assert all(scope.startswith("sentry-") for scope in scopes)
+    assert scopes[0] != scopes[1]
+
+
 @pytest.mark.parametrize("status", [401, 403])
 def test_rejected_token_raises_auth_error_without_retry_or_leak(status: int) -> None:
     calls = []

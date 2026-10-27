@@ -1,0 +1,26 @@
+{
+  "date_utc": "2026-10-27",
+  "backend": {
+    "passed": 180,
+    "skipped": 3,
+    "note": "Final local suite; clean installation base was independently tested before the additive history-comparison case."
+  },
+  "browser": {
+    "passed": 21,
+    "browser": "Installed Chrome via PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH"
+  },
+  "frontend_build": "passed",
+  "clean_source": {
+    "separate_venv": true,
+    "separate_npm_install": true,
+    "backend_passed": 179,
+    "backend_skipped": 3,
+    "build": "passed",
+    "live_packet": "clean-setup-live.json"
+  },
+  "opt_in_skips": [
+    "2 agent live tests",
+    "1 Zetaris live test"
+  ],
+  "live_checks": "Executed separately through v2; see final-live-decision-packet.json and model suites."
+}

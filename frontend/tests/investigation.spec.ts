@@ -5,7 +5,7 @@ test("AI failure stays explicit while the real simulator works", async ({ page }
     status: 503, contentType: "application/json",
     body: JSON.stringify({ detail: "Agent runtime not configured: Nightshift needs METERLESS_BASE_URL" }),
   }));
-  await page.goto("/");
+  await page.goto("/legacy");
   await expect(page.getByLabel("Supplier", { exact: true })).toBeEnabled();
   await page.getByRole("button", { name: "Run AI investigation" }).click();
   await expect(page.getByRole("alert")).toContainText("AI investigation unavailable");
@@ -26,7 +26,7 @@ test("unresolved model output is not shown as a recommendation", async ({ page }
       memory: null, plan: [], tool_calls: [], data_source: "fixture", disclaimer: "Test transport fixture.",
     }),
   }));
-  await page.goto("/");
+  await page.goto("/legacy");
   await page.getByRole("button", { name: "Run AI investigation" }).click();
   const panel = page.getByRole("region", { name: "Ask Sentry to explain why" });
   await expect(panel).toContainText("Investigation unresolved");
@@ -51,7 +51,7 @@ test("validated report exposes explanation, evidence, receipts and memory", asyn
       data_source: "fixture", disclaimer: "Test transport fixture.",
     }),
   }));
-  await page.goto("/");
+  await page.goto("/legacy");
   await page.getByRole("button", { name: "Run AI investigation" }).click();
   const panel = page.getByRole("region", { name: "Ask Sentry to explain why" });
   await expect(panel).toContainText("AI recommendation validated");

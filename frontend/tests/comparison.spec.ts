@@ -11,7 +11,7 @@ const explanation = (page: Page) =>
 async function openWorkspace(page: Page) {
   // External typography is optional; keep tests independent of Google Fonts.
   await page.route("https://fonts.googleapis.com/**", (route) => route.abort());
-  await page.goto("/");
+  await page.goto("/legacy");
   await expect(page.getByLabel("Supplier", { exact: true })).toBeEnabled();
 }
 

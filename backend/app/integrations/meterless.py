@@ -12,6 +12,7 @@ receipt says which one answered. Nothing here fabricates a completion; every fai
 import os
 import random
 import time
+import uuid
 from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass, field, replace
 from pathlib import Path
@@ -50,6 +51,7 @@ class Completion:
     completion_tokens: int = 0
     latency_ms: int | None = None
     cross_check: str | None = None
+    from_cache: bool = False
 
 
 class InferenceProvider(Protocol):
@@ -79,6 +81,8 @@ class MeterlessConfig:
     connect_timeout: float = 5.0
     read_timeout: float = 120.0
     max_retries: int = 2
+    structured_output: bool = False
+    fresh_inference: bool = False
 
     @classmethod
     def from_env(cls, environ: Mapping[str, str] | None = None) -> "MeterlessConfig":
@@ -147,13 +151,17 @@ class NightshiftClient:
             "model": self.config.model, "stream": False, "max_tokens": max_tokens,
             "temperature": temperature, "messages": [dict(message) for message in messages],
         }
-        return parse_completion(self._request("POST", "/chat/completions", json=body), self.config.model)
+        if self.config.structured_output:
+            body["response_format"] = {"type": "json_object"}
+        # A revised investigation must not reuse a semantically similar rejected draft.
+        headers = {"meterless-scope": "sentry-" + uuid.uuid4().hex} if self.config.fresh_inference else None
+        return parse_completion(self._request("POST", "/chat/completions", json=body, headers=headers), self.config.model)
 
-    def _request(self, method: str, path: str, json: Any = None) -> Any:
+    def _request(self, method: str, path: str, json: Any = None, headers: Any = None) -> Any:
         attempts = self.config.max_retries + 1
         for attempt in range(1, attempts + 1):
             try:
-                response = self._http.request(method, path, json=json)
+                response = self._http.request(method, path, json=json, headers=headers)
             except (httpx.TimeoutException, httpx.TransportError) as exc:
                 if attempt == attempts:
                     raise MeterlessUnavailable(
@@ -207,6 +215,7 @@ def parse_completion(payload: Any, requested_model: str) -> Completion:
         requested_model=str(receipt.get("requested_model") or requested_model),
         provider=str(route.get("provider") or ""),
         receipt_signed=bool(receipt.get("receipt_envelope")),
+        from_cache=bool(receipt.get("from_cache")),
         prompt_tokens=int(usage.get("prompt_tokens") or 0),
         completion_tokens=int(usage.get("completion_tokens") or 0),
         latency_ms=receipt_usage.get("latency_ms") if isinstance(receipt_usage.get("latency_ms"), int) else None,

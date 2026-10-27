@@ -127,7 +127,7 @@ def investigate(
 
 def _remember(
     memory: HMemEngine, investigation_id: str, key: str, recalled: list[RecalledMemory],
-    claim: Claim | None, tools: InvestigationTools,
+    claim: Claim | None, tools: InvestigationTools, *, provenance_refs: tuple[str, ...] = (),
 ) -> MemoryUsage:
     stored_id = None
     feedback: list[dict[str, str]] = []
@@ -143,7 +143,7 @@ def _remember(
             source=f"sentry-ai://investigations/{investigation_id}",
             tags=[f"supplier:{result.supplier_id}", f"sku:{tools.supplier.sku}", f"strategy:{claim.recommended_strategy}",
                   f"delay:{result.delay_days}"],
-            confidence=0.9, layer="long_term", memory_type="factual", refs=claim.evidence_ids,
+            confidence=0.9, layer="long_term", memory_type="factual", refs=[*claim.evidence_ids, *provenance_refs],
             label=f"validated investigation {investigation_id}",
         )
         stored_id = stored["id"]

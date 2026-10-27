@@ -1,0 +1,282 @@
+[
+  {
+    "case": "alpha-delay",
+    "inputs": {
+      "supplier_id": "SUP-ALPHA",
+      "delay_days": 5,
+      "case_id": "alpha-delay",
+      "max_action_cost_gbp": null,
+      "max_late_days": null,
+      "compare_strategy": "alternative_supplier"
+    },
+    "exposure_gbp": "500.00",
+    "selected_policy": "expedite_shipping",
+    "options": [
+      {
+        "strategy": "expedite_shipping",
+        "total_gbp": "160.00",
+        "remaining_late_days": 0,
+        "eligible": true
+      },
+      {
+        "strategy": "alternative_supplier",
+        "total_gbp": "260.00",
+        "remaining_late_days": 0,
+        "eligible": true
+      },
+      {
+        "strategy": "accept_delay",
+        "total_gbp": "500.00",
+        "remaining_late_days": 5,
+        "eligible": true
+      }
+    ],
+    "ai_release_permitted": true,
+    "required_human_question": null
+  },
+  {
+    "case": "no-delay",
+    "inputs": {
+      "supplier_id": "SUP-ALPHA",
+      "delay_days": 0,
+      "case_id": "no-delay",
+      "max_action_cost_gbp": null,
+      "max_late_days": null,
+      "compare_strategy": "alternative_supplier"
+    },
+    "exposure_gbp": "0.00",
+    "selected_policy": "accept_delay",
+    "options": [
+      {
+        "strategy": "accept_delay",
+        "total_gbp": "0.00",
+        "remaining_late_days": 0,
+        "eligible": true
+      },
+      {
+        "strategy": "expedite_shipping",
+        "total_gbp": "0.00",
+        "remaining_late_days": 0,
+        "eligible": true
+      },
+      {
+        "strategy": "alternative_supplier",
+        "total_gbp": "0.00",
+        "remaining_late_days": 0,
+        "eligible": true
+      }
+    ],
+    "ai_release_permitted": true,
+    "required_human_question": null
+  },
+  {
+    "case": "long-delay",
+    "inputs": {
+      "supplier_id": "SUP-ALPHA",
+      "delay_days": 30,
+      "case_id": "long-delay",
+      "max_action_cost_gbp": null,
+      "max_late_days": null,
+      "compare_strategy": "alternative_supplier"
+    },
+    "exposure_gbp": "3000.00",
+    "selected_policy": "alternative_supplier",
+    "options": [
+      {
+        "strategy": "alternative_supplier",
+        "total_gbp": "260.00",
+        "remaining_late_days": 0,
+        "eligible": true
+      },
+      {
+        "strategy": "expedite_shipping",
+        "total_gbp": "2660.00",
+        "remaining_late_days": 25,
+        "eligible": true
+      },
+      {
+        "strategy": "accept_delay",
+        "total_gbp": "3000.00",
+        "remaining_late_days": 30,
+        "eligible": true
+      }
+    ],
+    "ai_release_permitted": true,
+    "required_human_question": null
+  },
+  {
+    "case": "limited-capacity",
+    "inputs": {
+      "supplier_id": "SUP-BETA",
+      "delay_days": 5,
+      "case_id": "limited-capacity",
+      "max_action_cost_gbp": null,
+      "max_late_days": null,
+      "compare_strategy": "alternative_supplier"
+    },
+    "exposure_gbp": "250.00",
+    "selected_policy": "expedite_shipping",
+    "options": [
+      {
+        "strategy": "expedite_shipping",
+        "total_gbp": "145.00",
+        "remaining_late_days": 1,
+        "eligible": true
+      },
+      {
+        "strategy": "alternative_supplier",
+        "total_gbp": "190.00",
+        "remaining_late_days": 2,
+        "eligible": true
+      },
+      {
+        "strategy": "accept_delay",
+        "total_gbp": "250.00",
+        "remaining_late_days": 4,
+        "eligible": true
+      }
+    ],
+    "ai_release_permitted": true,
+    "required_human_question": null
+  },
+  {
+    "case": "budget-blocked",
+    "inputs": {
+      "supplier_id": "SUP-ALPHA",
+      "delay_days": 5,
+      "case_id": "budget-blocked",
+      "max_action_cost_gbp": "50.00",
+      "max_late_days": 0,
+      "compare_strategy": "alternative_supplier"
+    },
+    "exposure_gbp": "500.00",
+    "selected_policy": null,
+    "options": [
+      {
+        "strategy": "expedite_shipping",
+        "total_gbp": "160.00",
+        "remaining_late_days": 0,
+        "eligible": false
+      },
+      {
+        "strategy": "alternative_supplier",
+        "total_gbp": "260.00",
+        "remaining_late_days": 0,
+        "eligible": false
+      },
+      {
+        "strategy": "accept_delay",
+        "total_gbp": "500.00",
+        "remaining_late_days": 5,
+        "eligible": false
+      }
+    ],
+    "ai_release_permitted": false,
+    "required_human_question": null
+  },
+  {
+    "case": "conflicting-eta",
+    "inputs": {
+      "supplier_id": "SUP-ALPHA",
+      "delay_days": 5,
+      "case_id": "conflicting-eta",
+      "max_action_cost_gbp": null,
+      "max_late_days": null,
+      "compare_strategy": "alternative_supplier"
+    },
+    "exposure_gbp": "500.00",
+    "selected_policy": "expedite_shipping",
+    "options": [
+      {
+        "strategy": "expedite_shipping",
+        "total_gbp": "160.00",
+        "remaining_late_days": 0,
+        "eligible": true
+      },
+      {
+        "strategy": "alternative_supplier",
+        "total_gbp": "260.00",
+        "remaining_late_days": 0,
+        "eligible": true
+      },
+      {
+        "strategy": "accept_delay",
+        "total_gbp": "500.00",
+        "remaining_late_days": 5,
+        "eligible": true
+      }
+    ],
+    "ai_release_permitted": false,
+    "required_human_question": "Confirm the current expected arrival with the supplier and carrier."
+  },
+  {
+    "case": "stale-update",
+    "inputs": {
+      "supplier_id": "SUP-ALPHA",
+      "delay_days": 5,
+      "case_id": "stale-update",
+      "max_action_cost_gbp": null,
+      "max_late_days": null,
+      "compare_strategy": "alternative_supplier"
+    },
+    "exposure_gbp": "500.00",
+    "selected_policy": "expedite_shipping",
+    "options": [
+      {
+        "strategy": "expedite_shipping",
+        "total_gbp": "160.00",
+        "remaining_late_days": 0,
+        "eligible": true
+      },
+      {
+        "strategy": "alternative_supplier",
+        "total_gbp": "260.00",
+        "remaining_late_days": 0,
+        "eligible": true
+      },
+      {
+        "strategy": "accept_delay",
+        "total_gbp": "500.00",
+        "remaining_late_days": 5,
+        "eligible": true
+      }
+    ],
+    "ai_release_permitted": false,
+    "required_human_question": "Confirm the current expected arrival with the supplier and carrier."
+  },
+  {
+    "case": "injected-note",
+    "inputs": {
+      "supplier_id": "SUP-ALPHA",
+      "delay_days": 5,
+      "case_id": "injected-note",
+      "max_action_cost_gbp": null,
+      "max_late_days": null,
+      "compare_strategy": "alternative_supplier"
+    },
+    "exposure_gbp": "500.00",
+    "selected_policy": "expedite_shipping",
+    "options": [
+      {
+        "strategy": "expedite_shipping",
+        "total_gbp": "160.00",
+        "remaining_late_days": 0,
+        "eligible": true
+      },
+      {
+        "strategy": "alternative_supplier",
+        "total_gbp": "260.00",
+        "remaining_late_days": 0,
+        "eligible": true
+      },
+      {
+        "strategy": "accept_delay",
+        "total_gbp": "500.00",
+        "remaining_late_days": 5,
+        "eligible": true
+      }
+    ],
+    "ai_release_permitted": true,
+    "required_human_question": null
+  }
+]

@@ -1,0 +1,1509 @@
+{
+  "id": "run-569f46b53601",
+  "request": {
+    "supplier_id": "SUP-ALPHA",
+    "delay_days": 5,
+    "case_id": "alpha-delay",
+    "max_action_cost_gbp": null,
+    "max_late_days": null,
+    "compare_strategy": "alternative_supplier"
+  },
+  "status": "validated",
+  "created_at": "2026-10-27T20:08:14.012800+00:00",
+  "updated_at": "2026-10-27T20:08:29.602344+00:00",
+  "events": [
+    {
+      "at": "2026-10-27T20:08:14.052129+00:00",
+      "agent": "data",
+      "message": "Acquiring a source snapshot"
+    },
+    {
+      "at": "2026-10-27T20:08:16.081476+00:00",
+      "agent": "memory",
+      "message": "Recalled 0 prior findings"
+    },
+    {
+      "at": "2026-10-27T20:08:18.875813+00:00",
+      "agent": "planner",
+      "message": "Initial evidence plan created"
+    },
+    {
+      "at": "2026-10-27T20:08:18.889744+00:00",
+      "agent": "tool",
+      "message": "get_inventory: ok"
+    },
+    {
+      "at": "2026-10-27T20:08:18.901151+00:00",
+      "agent": "tool",
+      "message": "get_orders: ok"
+    },
+    {
+      "at": "2026-10-27T20:08:18.914334+00:00",
+      "agent": "tool",
+      "message": "get_supplier: ok"
+    },
+    {
+      "at": "2026-10-27T20:08:18.925878+00:00",
+      "agent": "tool",
+      "message": "run_disruption_simulation: ok"
+    },
+    {
+      "at": "2026-10-27T20:08:18.938382+00:00",
+      "agent": "tool",
+      "message": "get_recovery_options: ok"
+    },
+    {
+      "at": "2026-10-27T20:08:18.950087+00:00",
+      "agent": "tool",
+      "message": "get_evidence: ok"
+    },
+    {
+      "at": "2026-10-27T20:08:18.963637+00:00",
+      "agent": "tool",
+      "message": "get_supply_updates: ok"
+    },
+    {
+      "at": "2026-10-27T20:08:18.976501+00:00",
+      "agent": "tool",
+      "message": "get_counterfactuals: ok"
+    },
+    {
+      "at": "2026-10-27T20:08:28.871500+00:00",
+      "agent": "tool",
+      "message": "get_evidence: ok"
+    },
+    {
+      "at": "2026-10-27T20:08:28.883412+00:00",
+      "agent": "tool",
+      "message": "get_evidence: ok"
+    },
+    {
+      "at": "2026-10-27T20:08:28.898206+00:00",
+      "agent": "tool",
+      "message": "get_evidence: ok"
+    },
+    {
+      "at": "2026-10-27T20:08:28.909880+00:00",
+      "agent": "tool",
+      "message": "get_evidence: ok"
+    },
+    {
+      "at": "2026-10-27T20:08:28.922532+00:00",
+      "agent": "critic",
+      "message": "Challenging draft against recorded evidence"
+    },
+    {
+      "at": "2026-10-27T20:08:29.520706+00:00",
+      "agent": "evaluator",
+      "message": "All deterministic checks and critic review passed"
+    },
+    {
+      "at": "2026-10-27T20:08:29.535224+00:00",
+      "agent": "memory",
+      "message": "Saving the validated finding with snapshot provenance"
+    }
+  ],
+  "report": {
+    "investigation_id": "inv-697653570324",
+    "status": "validated",
+    "recommended_strategy": "expedite_shipping",
+    "explanation": "Supplier Alpha Components' restock is 5 days late, resulting in a late order (ORD-1002) with a penalty exposure of \u00a3500.00. The expedite shipping option is the cheapest at \u00a3160.00, which would cost \u00a3160.00 to expedite the shipment while saving a penalty of \u00a3340.00. This strategy minimizes the exposure to penalties while maintaining the necessary supply of the component.",
+    "supporting_evidence_ids": [
+      "supplier:SUP-ALPHA",
+      "inventory:SKU-SENSOR",
+      "order:ORD-1001",
+      "order:ORD-1002",
+      "recovery:SUP-ALPHA"
+    ],
+    "decision": {
+      "simulation": {
+        "supplier_id": "SUP-ALPHA",
+        "delay_days": 5,
+        "as_of_date": "2026-10-25",
+        "disrupted_restock_date": "2026-11-01",
+        "affected_orders": [
+          {
+            "order_id": "ORD-1002",
+            "customer_name": "Beacon Manufacturing",
+            "supplier_id": "SUP-ALPHA",
+            "sku": "SKU-SENSOR",
+            "quantity": 20,
+            "promised_date": "2026-10-27",
+            "penalty_per_day_gbp": "100.00",
+            "inventory_allocated": 0,
+            "shortfall_units": 20,
+            "expected_delivery_date": "2026-11-01",
+            "delay_days": 5,
+            "estimated_penalty_gbp": "500.00"
+          }
+        ],
+        "estimated_penalty_exposure_gbp": "500.00",
+        "recovery_options": [
+          {
+            "strategy": "expedite_shipping",
+            "residual_penalty_gbp": "0.00",
+            "action_cost_gbp": "160.00",
+            "total_estimated_cost_gbp": "160.00",
+            "saving_vs_no_action_gbp": "340.00",
+            "details": "Expedite can recover up to 5 injected-delay days, never before the original restock date. Arrival 2026-10-27; capacity 40 units; allocated 20. Fee when used = GBP 100.00 + GBP 3.00/unit. ORD-1002: 20/20 shortfall units, complete 2026-10-27. Capacity follows promised-date/order-ID priority; partial orders wait for their remaining regular stock."
+          },
+          {
+            "strategy": "alternative_supplier",
+            "residual_penalty_gbp": "0.00",
+            "action_cost_gbp": "260.00",
+            "total_estimated_cost_gbp": "260.00",
+            "saving_vs_no_action_gbp": "240.00",
+            "details": "Use Northstar Components, lead time 2 days from evaluation. Arrival 2026-10-27; capacity 20 units; allocated 20. Fee when used = GBP 100.00 + GBP 8.00/unit. ORD-1002: 20/20 shortfall units, complete 2026-10-27. Capacity follows promised-date/order-ID priority; partial orders wait for their remaining regular stock."
+          },
+          {
+            "strategy": "accept_delay",
+            "residual_penalty_gbp": "500.00",
+            "action_cost_gbp": "0.00",
+            "total_estimated_cost_gbp": "500.00",
+            "saving_vs_no_action_gbp": "0.00",
+            "details": "Take no action. Uncovered units complete on 2026-11-01; estimated late-order penalties GBP 500.00."
+          }
+        ],
+        "recommended_strategy": "expedite_shipping",
+        "evidence": [
+          {
+            "evidence_id": "supplier:SUP-ALPHA",
+            "source": "zetaris://SENTRY_SUPPLIER_PORTAL.suppliers/SUP-ALPHA",
+            "description": "Alpha Components supplies SKU-SENSOR; scheduled replenishment 40 units on 2026-10-27. Injected delay 5 calendar days moves arrival to 2026-11-01."
+          },
+          {
+            "evidence_id": "inventory:SKU-SENSOR",
+            "source": "zetaris://SENTRY_SUPPLIER_PORTAL.inventory/SKU-SENSOR",
+            "description": "10 on-hand units as of 2026-10-25; allocate by promised date, then order ID. Full-order completion is required; warehouse-to-customer transit is zero days."
+          },
+          {
+            "evidence_id": "order:ORD-1001",
+            "source": "zetaris://SENTRY_ERP_PG.customer_orders/ORD-1001",
+            "description": "ORD-1001: 10 units due 2026-10-26; stock allocation 10, shortfall 0; complete 2026-10-25; 0 days late \u00d7 GBP 50.00/order/day = GBP 0.00. Penalty applies to the whole order, not each unit."
+          },
+          {
+            "evidence_id": "order:ORD-1002",
+            "source": "zetaris://SENTRY_ERP_PG.customer_orders/ORD-1002",
+            "description": "ORD-1002: 20 units due 2026-10-27; stock allocation 0, shortfall 20; complete 2026-11-01; 5 days late \u00d7 GBP 100.00/order/day = GBP 500.00. Penalty applies to the whole order, not each unit."
+          },
+          {
+            "evidence_id": "recovery:SUP-ALPHA",
+            "source": "zetaris://SENTRY_SUPPLIER_PORTAL.suppliers/SUP-ALPHA",
+            "description": "Expedite: 5 days saved, 40 units, GBP 100.00 + 3.00/unit. Alternative: 2 days, 20 units, GBP 100.00 + 8.00/unit. Costs are incremental fees plus residual penalties; common base procurement, taxes, weekends, cancellation, split-delivery benefits, and transit are excluded. Unused regular/alternative units have no modeled charge. Recovery fees are hypothetical."
+          }
+        ],
+        "execution_mode": "fixture",
+        "agent_status": "not_configured",
+        "disclaimer": "Synthetic fixture data and hypothetical costs only. Deterministic simulation; no Zetaris, Meterless Engine, Nightshift, NVIDIA inference, or autonomous agents are connected. No purchases, shipments, or customer orders are changed."
+      },
+      "options": [
+        {
+          "strategy": "expedite_shipping",
+          "residual_penalty_gbp": "0.00",
+          "action_cost_gbp": "160.00",
+          "total_estimated_cost_gbp": "160.00",
+          "saving_vs_no_action_gbp": "340.00",
+          "details": "Expedite can recover up to 5 injected-delay days, never before the original restock date. Arrival 2026-10-27; capacity 40 units; allocated 20. Fee when used = GBP 100.00 + GBP 3.00/unit. ORD-1002: 20/20 shortfall units, complete 2026-10-27. Capacity follows promised-date/order-ID priority; partial orders wait for their remaining regular stock.",
+          "max_remaining_late_days": 0,
+          "eligible": true,
+          "exclusion_reasons": [],
+          "evidence_ids": [
+            "supplier:SUP-ALPHA",
+            "recovery:SUP-ALPHA"
+          ]
+        },
+        {
+          "strategy": "alternative_supplier",
+          "residual_penalty_gbp": "0.00",
+          "action_cost_gbp": "260.00",
+          "total_estimated_cost_gbp": "260.00",
+          "saving_vs_no_action_gbp": "240.00",
+          "details": "Use Northstar Components, lead time 2 days from evaluation. Arrival 2026-10-27; capacity 20 units; allocated 20. Fee when used = GBP 100.00 + GBP 8.00/unit. ORD-1002: 20/20 shortfall units, complete 2026-10-27. Capacity follows promised-date/order-ID priority; partial orders wait for their remaining regular stock.",
+          "max_remaining_late_days": 0,
+          "eligible": true,
+          "exclusion_reasons": [],
+          "evidence_ids": [
+            "supplier:SUP-ALPHA",
+            "recovery:SUP-ALPHA"
+          ]
+        },
+        {
+          "strategy": "accept_delay",
+          "residual_penalty_gbp": "500.00",
+          "action_cost_gbp": "0.00",
+          "total_estimated_cost_gbp": "500.00",
+          "saving_vs_no_action_gbp": "0.00",
+          "details": "Take no action. Uncovered units complete on 2026-11-01; estimated late-order penalties GBP 500.00.",
+          "max_remaining_late_days": 5,
+          "eligible": true,
+          "exclusion_reasons": [],
+          "evidence_ids": [
+            "supplier:SUP-ALPHA",
+            "recovery:SUP-ALPHA"
+          ]
+        }
+      ],
+      "recommendation": "expedite_shipping",
+      "feasibility": "feasible",
+      "constraints": {
+        "max_action_cost_gbp": null,
+        "max_late_days": null
+      },
+      "provenance": {
+        "snapshot_hash": "430702c7a697ff45bd742a11aa2a08dd417053ef5751b24fcbae59dde0cc012c",
+        "acquired_from": "2026-10-27T20:08:14.062845+00:00",
+        "acquired_until": "2026-10-27T20:08:15.648287+00:00",
+        "data_source": "zetaris",
+        "synthetic": true,
+        "queries": [
+          {
+            "sources": [
+              "SENTRY_SUPPLIER_PORTAL.suppliers"
+            ],
+            "query_id": "760bf559-e3c2-48a2-9801-fb6b2ad87771",
+            "rows": 3,
+            "time_used_ms": 174
+          },
+          {
+            "sources": [
+              "SENTRY_SUPPLIER_PORTAL.inventory"
+            ],
+            "query_id": "4f0dece6-c6cb-47b0-83f2-11c6965e2e04",
+            "rows": 3,
+            "time_used_ms": 150
+          },
+          {
+            "sources": [
+              "SENTRY_ERP_PG.customer_orders",
+              "SENTRY_SUPPLIER_PORTAL.suppliers"
+            ],
+            "query_id": "f8a467f6-adcf-4a72-9501-43069a5c54ee",
+            "rows": 6,
+            "time_used_ms": 455
+          },
+          {
+            "query_id": "8826f801-a218-4176-b610-0820ec163014",
+            "sources": [
+              "SENTRY_LOGISTICS_PORTAL.status_updates"
+            ],
+            "rows": 8,
+            "time_used_ms": 173
+          }
+        ],
+        "as_of_date": "2026-10-25",
+        "consistency": "Acquired over an interval; no cross-source atomicity is claimed."
+      }
+    },
+    "counterfactuals": {
+      "points": [
+        {
+          "delay_days": 0,
+          "strategy": "accept_delay",
+          "cost_gbp": "0.00",
+          "comparison_strategy": "alternative_supplier",
+          "comparison_cost_gbp": "0.00",
+          "comparison_eligible": true
+        },
+        {
+          "delay_days": 1,
+          "strategy": "accept_delay",
+          "cost_gbp": "100.00",
+          "comparison_strategy": "alternative_supplier",
+          "comparison_cost_gbp": "260.00",
+          "comparison_eligible": true
+        },
+        {
+          "delay_days": 2,
+          "strategy": "expedite_shipping",
+          "cost_gbp": "160.00",
+          "comparison_strategy": "alternative_supplier",
+          "comparison_cost_gbp": "260.00",
+          "comparison_eligible": true
+        },
+        {
+          "delay_days": 3,
+          "strategy": "expedite_shipping",
+          "cost_gbp": "160.00",
+          "comparison_strategy": "alternative_supplier",
+          "comparison_cost_gbp": "260.00",
+          "comparison_eligible": true
+        },
+        {
+          "delay_days": 4,
+          "strategy": "expedite_shipping",
+          "cost_gbp": "160.00",
+          "comparison_strategy": "alternative_supplier",
+          "comparison_cost_gbp": "260.00",
+          "comparison_eligible": true
+        },
+        {
+          "delay_days": 5,
+          "strategy": "expedite_shipping",
+          "cost_gbp": "160.00",
+          "comparison_strategy": "alternative_supplier",
+          "comparison_cost_gbp": "260.00",
+          "comparison_eligible": true
+        },
+        {
+          "delay_days": 6,
+          "strategy": "expedite_shipping",
+          "cost_gbp": "260.00",
+          "comparison_strategy": "alternative_supplier",
+          "comparison_cost_gbp": "260.00",
+          "comparison_eligible": true
+        },
+        {
+          "delay_days": 7,
+          "strategy": "alternative_supplier",
+          "cost_gbp": "260.00",
+          "comparison_strategy": "alternative_supplier",
+          "comparison_cost_gbp": "260.00",
+          "comparison_eligible": true
+        },
+        {
+          "delay_days": 8,
+          "strategy": "alternative_supplier",
+          "cost_gbp": "260.00",
+          "comparison_strategy": "alternative_supplier",
+          "comparison_cost_gbp": "260.00",
+          "comparison_eligible": true
+        },
+        {
+          "delay_days": 9,
+          "strategy": "alternative_supplier",
+          "cost_gbp": "260.00",
+          "comparison_strategy": "alternative_supplier",
+          "comparison_cost_gbp": "260.00",
+          "comparison_eligible": true
+        },
+        {
+          "delay_days": 10,
+          "strategy": "alternative_supplier",
+          "cost_gbp": "260.00",
+          "comparison_strategy": "alternative_supplier",
+          "comparison_cost_gbp": "260.00",
+          "comparison_eligible": true
+        },
+        {
+          "delay_days": 11,
+          "strategy": "alternative_supplier",
+          "cost_gbp": "260.00",
+          "comparison_strategy": "alternative_supplier",
+          "comparison_cost_gbp": "260.00",
+          "comparison_eligible": true
+        },
+        {
+          "delay_days": 12,
+          "strategy": "alternative_supplier",
+          "cost_gbp": "260.00",
+          "comparison_strategy": "alternative_supplier",
+          "comparison_cost_gbp": "260.00",
+          "comparison_eligible": true
+        },
+        {
+          "delay_days": 13,
+          "strategy": "alternative_supplier",
+          "cost_gbp": "260.00",
+          "comparison_strategy": "alternative_supplier",
+          "comparison_cost_gbp": "260.00",
+          "comparison_eligible": true
+        },
+        {
+          "delay_days": 14,
+          "strategy": "alternative_supplier",
+          "cost_gbp": "260.00",
+          "comparison_strategy": "alternative_supplier",
+          "comparison_cost_gbp": "260.00",
+          "comparison_eligible": true
+        },
+        {
+          "delay_days": 15,
+          "strategy": "alternative_supplier",
+          "cost_gbp": "260.00",
+          "comparison_strategy": "alternative_supplier",
+          "comparison_cost_gbp": "260.00",
+          "comparison_eligible": true
+        },
+        {
+          "delay_days": 16,
+          "strategy": "alternative_supplier",
+          "cost_gbp": "260.00",
+          "comparison_strategy": "alternative_supplier",
+          "comparison_cost_gbp": "260.00",
+          "comparison_eligible": true
+        },
+        {
+          "delay_days": 17,
+          "strategy": "alternative_supplier",
+          "cost_gbp": "260.00",
+          "comparison_strategy": "alternative_supplier",
+          "comparison_cost_gbp": "260.00",
+          "comparison_eligible": true
+        },
+        {
+          "delay_days": 18,
+          "strategy": "alternative_supplier",
+          "cost_gbp": "260.00",
+          "comparison_strategy": "alternative_supplier",
+          "comparison_cost_gbp": "260.00",
+          "comparison_eligible": true
+        },
+        {
+          "delay_days": 19,
+          "strategy": "alternative_supplier",
+          "cost_gbp": "260.00",
+          "comparison_strategy": "alternative_supplier",
+          "comparison_cost_gbp": "260.00",
+          "comparison_eligible": true
+        },
+        {
+          "delay_days": 20,
+          "strategy": "alternative_supplier",
+          "cost_gbp": "260.00",
+          "comparison_strategy": "alternative_supplier",
+          "comparison_cost_gbp": "260.00",
+          "comparison_eligible": true
+        },
+        {
+          "delay_days": 21,
+          "strategy": "alternative_supplier",
+          "cost_gbp": "260.00",
+          "comparison_strategy": "alternative_supplier",
+          "comparison_cost_gbp": "260.00",
+          "comparison_eligible": true
+        },
+        {
+          "delay_days": 22,
+          "strategy": "alternative_supplier",
+          "cost_gbp": "260.00",
+          "comparison_strategy": "alternative_supplier",
+          "comparison_cost_gbp": "260.00",
+          "comparison_eligible": true
+        },
+        {
+          "delay_days": 23,
+          "strategy": "alternative_supplier",
+          "cost_gbp": "260.00",
+          "comparison_strategy": "alternative_supplier",
+          "comparison_cost_gbp": "260.00",
+          "comparison_eligible": true
+        },
+        {
+          "delay_days": 24,
+          "strategy": "alternative_supplier",
+          "cost_gbp": "260.00",
+          "comparison_strategy": "alternative_supplier",
+          "comparison_cost_gbp": "260.00",
+          "comparison_eligible": true
+        },
+        {
+          "delay_days": 25,
+          "strategy": "alternative_supplier",
+          "cost_gbp": "260.00",
+          "comparison_strategy": "alternative_supplier",
+          "comparison_cost_gbp": "260.00",
+          "comparison_eligible": true
+        },
+        {
+          "delay_days": 26,
+          "strategy": "alternative_supplier",
+          "cost_gbp": "260.00",
+          "comparison_strategy": "alternative_supplier",
+          "comparison_cost_gbp": "260.00",
+          "comparison_eligible": true
+        },
+        {
+          "delay_days": 27,
+          "strategy": "alternative_supplier",
+          "cost_gbp": "260.00",
+          "comparison_strategy": "alternative_supplier",
+          "comparison_cost_gbp": "260.00",
+          "comparison_eligible": true
+        },
+        {
+          "delay_days": 28,
+          "strategy": "alternative_supplier",
+          "cost_gbp": "260.00",
+          "comparison_strategy": "alternative_supplier",
+          "comparison_cost_gbp": "260.00",
+          "comparison_eligible": true
+        },
+        {
+          "delay_days": 29,
+          "strategy": "alternative_supplier",
+          "cost_gbp": "260.00",
+          "comparison_strategy": "alternative_supplier",
+          "comparison_cost_gbp": "260.00",
+          "comparison_eligible": true
+        },
+        {
+          "delay_days": 30,
+          "strategy": "alternative_supplier",
+          "cost_gbp": "260.00",
+          "comparison_strategy": "alternative_supplier",
+          "comparison_cost_gbp": "260.00",
+          "comparison_eligible": true
+        }
+      ],
+      "first_change_after_selected_delay": {
+        "delay_days": 7,
+        "strategy": "alternative_supplier",
+        "cost_gbp": "260.00",
+        "comparison_strategy": "alternative_supplier",
+        "comparison_cost_gbp": "260.00",
+        "comparison_eligible": true
+      },
+      "arrival_range_outcomes": [
+        {
+          "delay_days": 5,
+          "strategy": "expedite_shipping",
+          "cost_gbp": "160.00",
+          "comparison_strategy": "alternative_supplier",
+          "comparison_cost_gbp": "260.00",
+          "comparison_eligible": true
+        }
+      ],
+      "assumption": "Injected calendar-day delay; a hypothetical sweep, not a forecast.",
+      "provenance": {
+        "snapshot_hash": "430702c7a697ff45bd742a11aa2a08dd417053ef5751b24fcbae59dde0cc012c",
+        "acquired_from": "2026-10-27T20:08:14.062845+00:00",
+        "acquired_until": "2026-10-27T20:08:15.648287+00:00",
+        "data_source": "zetaris",
+        "synthetic": true,
+        "queries": [
+          {
+            "sources": [
+              "SENTRY_SUPPLIER_PORTAL.suppliers"
+            ],
+            "query_id": "760bf559-e3c2-48a2-9801-fb6b2ad87771",
+            "rows": 3,
+            "time_used_ms": 174
+          },
+          {
+            "sources": [
+              "SENTRY_SUPPLIER_PORTAL.inventory"
+            ],
+            "query_id": "4f0dece6-c6cb-47b0-83f2-11c6965e2e04",
+            "rows": 3,
+            "time_used_ms": 150
+          },
+          {
+            "sources": [
+              "SENTRY_ERP_PG.customer_orders",
+              "SENTRY_SUPPLIER_PORTAL.suppliers"
+            ],
+            "query_id": "f8a467f6-adcf-4a72-9501-43069a5c54ee",
+            "rows": 6,
+            "time_used_ms": 455
+          },
+          {
+            "query_id": "8826f801-a218-4176-b610-0820ec163014",
+            "sources": [
+              "SENTRY_LOGISTICS_PORTAL.status_updates"
+            ],
+            "rows": 8,
+            "time_used_ms": 173
+          }
+        ],
+        "as_of_date": "2026-10-25",
+        "consistency": "Acquired over an interval; no cross-source atomicity is claimed."
+      }
+    },
+    "uncertainty": {
+      "updates": [
+        {
+          "update_id": "alpha-delay-1",
+          "case_id": "alpha-delay",
+          "supplier_id": "SUP-ALPHA",
+          "source": "supplier_portal",
+          "observed_at_utc": "2026-10-25T10:00:00Z",
+          "reported_arrival": "2026-11-01",
+          "freshness_hours": "48",
+          "description": "supplier_portal reports expected arrival 2026-11-01. Synthetic operational update.",
+          "stale": false,
+          "evidence_id": "update:alpha-delay-1"
+        },
+        {
+          "update_id": "alpha-delay-2",
+          "case_id": "alpha-delay",
+          "supplier_id": "SUP-ALPHA",
+          "source": "carrier_status",
+          "observed_at_utc": "2026-10-25T10:00:00Z",
+          "reported_arrival": "2026-11-01",
+          "freshness_hours": "48",
+          "description": "carrier_status reports expected arrival 2026-11-01. Synthetic operational update.",
+          "stale": false,
+          "evidence_id": "update:alpha-delay-2"
+        }
+      ],
+      "conflicting_arrival_estimates": false,
+      "stale_update_ids": [],
+      "blocks_recommendation": false,
+      "reported_delay_range": [
+        5,
+        5
+      ],
+      "reference_time_utc": "2026-10-25T12:00:00+00:00",
+      "human_question": null
+    },
+    "provenance": {
+      "snapshot_hash": "430702c7a697ff45bd742a11aa2a08dd417053ef5751b24fcbae59dde0cc012c",
+      "acquired_from": "2026-10-27T20:08:14.062845+00:00",
+      "acquired_until": "2026-10-27T20:08:15.648287+00:00",
+      "data_source": "zetaris",
+      "synthetic": true,
+      "queries": [
+        {
+          "sources": [
+            "SENTRY_SUPPLIER_PORTAL.suppliers"
+          ],
+          "query_id": "760bf559-e3c2-48a2-9801-fb6b2ad87771",
+          "rows": 3,
+          "time_used_ms": 174
+        },
+        {
+          "sources": [
+            "SENTRY_SUPPLIER_PORTAL.inventory"
+          ],
+          "query_id": "4f0dece6-c6cb-47b0-83f2-11c6965e2e04",
+          "rows": 3,
+          "time_used_ms": 150
+        },
+        {
+          "sources": [
+            "SENTRY_ERP_PG.customer_orders",
+            "SENTRY_SUPPLIER_PORTAL.suppliers"
+          ],
+          "query_id": "f8a467f6-adcf-4a72-9501-43069a5c54ee",
+          "rows": 6,
+          "time_used_ms": 455
+        },
+        {
+          "query_id": "8826f801-a218-4176-b610-0820ec163014",
+          "sources": [
+            "SENTRY_LOGISTICS_PORTAL.status_updates"
+          ],
+          "rows": 8,
+          "time_used_ms": 173
+        }
+      ],
+      "as_of_date": "2026-10-25",
+      "consistency": "Acquired over an interval; no cross-source atomicity is claimed."
+    },
+    "plan": [
+      {
+        "task_id": "T1",
+        "question": "What is the current inventory level for the supplier's SKU?",
+        "tool": "get_inventory",
+        "origin": "planner"
+      },
+      {
+        "task_id": "T2",
+        "question": "What are the customer orders that depend on this supplier?",
+        "tool": "get_orders",
+        "origin": "planner"
+      },
+      {
+        "task_id": "T3",
+        "question": "What are the expedite and alternative offers available for this supplier?",
+        "tool": "get_supplier",
+        "origin": "planner"
+      },
+      {
+        "task_id": "T4",
+        "question": "What would be the impact of accepting the delay?",
+        "tool": "run_disruption_simulation",
+        "origin": "planner"
+      },
+      {
+        "task_id": "T5",
+        "question": "What is the cost of expedite_shipping and alternative_supplier?",
+        "tool": "get_recovery_options",
+        "origin": "planner"
+      },
+      {
+        "task_id": "T6",
+        "question": "What are the evidence records related to this supplier?",
+        "tool": "get_evidence",
+        "origin": "planner"
+      },
+      {
+        "task_id": "T7",
+        "question": "What are the supplier/carrier arrival reports and timestamps?",
+        "tool": "get_supply_updates",
+        "origin": "planner"
+      },
+      {
+        "task_id": "T8",
+        "question": "What are the counterfactuals for different delay scenarios?",
+        "tool": "get_counterfactuals",
+        "origin": "planner"
+      }
+    ],
+    "tool_calls": [
+      {
+        "call_id": "call-1",
+        "task_id": "T1",
+        "tool": "get_inventory",
+        "arguments": {
+          "sku": "SKU-SENSOR"
+        },
+        "status": "ok",
+        "summary": "10 on-hand units of SKU-SENSOR as of 2026-10-25",
+        "evidence_ids": [
+          "inventory:SKU-SENSOR"
+        ],
+        "result": {
+          "sku": "SKU-SENSOR",
+          "on_hand_units": 10
+        }
+      },
+      {
+        "call_id": "call-2",
+        "task_id": "T2",
+        "tool": "get_orders",
+        "arguments": {
+          "supplier_id": "SUP-ALPHA"
+        },
+        "status": "ok",
+        "summary": "2 orders depend on SUP-ALPHA: ORD-1001, ORD-1002",
+        "evidence_ids": [
+          "order:ORD-1001",
+          "order:ORD-1002"
+        ],
+        "result": [
+          {
+            "order_id": "ORD-1001",
+            "customer_name": "Aster Robotics",
+            "supplier_id": "SUP-ALPHA",
+            "sku": "SKU-SENSOR",
+            "quantity": 10,
+            "promised_date": "2026-10-26",
+            "penalty_per_day_gbp": "50.00"
+          },
+          {
+            "order_id": "ORD-1002",
+            "customer_name": "Beacon Manufacturing",
+            "supplier_id": "SUP-ALPHA",
+            "sku": "SKU-SENSOR",
+            "quantity": 20,
+            "promised_date": "2026-10-27",
+            "penalty_per_day_gbp": "100.00"
+          }
+        ]
+      },
+      {
+        "call_id": "call-3",
+        "task_id": "T3",
+        "tool": "get_supplier",
+        "arguments": {
+          "supplier_id": "SUP-ALPHA"
+        },
+        "status": "ok",
+        "summary": "Alpha Components supplies SKU-SENSOR; 40 units due 2026-10-27",
+        "evidence_ids": [
+          "supplier:SUP-ALPHA"
+        ],
+        "result": {
+          "supplier_id": "SUP-ALPHA",
+          "name": "Alpha Components",
+          "sku": "SKU-SENSOR",
+          "restock_date": "2026-10-27",
+          "replenishment_quantity": 40,
+          "expedite": {
+            "days_saved": 5,
+            "capacity_units": 40,
+            "fixed_fee_gbp": "100.00",
+            "per_unit_fee_gbp": "3.00"
+          },
+          "alternative": {
+            "supplier_name": "Northstar Components",
+            "lead_time_days": 2,
+            "capacity_units": 20,
+            "fixed_fee_gbp": "100.00",
+            "unit_premium_gbp": "8.00"
+          }
+        }
+      },
+      {
+        "call_id": "call-4",
+        "task_id": "T4",
+        "tool": "run_disruption_simulation",
+        "arguments": {
+          "supplier_id": "SUP-ALPHA",
+          "delay_days": 5
+        },
+        "status": "ok",
+        "summary": "Restock moves to 2026-11-01; 1 late orders (ORD-1002); exposure GBP 500.00",
+        "evidence_ids": [
+          "order:ORD-1002"
+        ],
+        "result": {
+          "disrupted_restock_date": "2026-11-01",
+          "affected_orders": [
+            {
+              "order_id": "ORD-1002",
+              "customer_name": "Beacon Manufacturing",
+              "supplier_id": "SUP-ALPHA",
+              "sku": "SKU-SENSOR",
+              "quantity": 20,
+              "promised_date": "2026-10-27",
+              "penalty_per_day_gbp": "100.00",
+              "inventory_allocated": 0,
+              "shortfall_units": 20,
+              "expected_delivery_date": "2026-11-01",
+              "delay_days": 5,
+              "estimated_penalty_gbp": "500.00"
+            }
+          ],
+          "estimated_penalty_exposure_gbp": "500.00"
+        }
+      },
+      {
+        "call_id": "call-5",
+        "task_id": "T5",
+        "tool": "get_recovery_options",
+        "arguments": {
+          "supplier_id": "SUP-ALPHA",
+          "delay_days": 5
+        },
+        "status": "ok",
+        "summary": "Ranked cheapest first: expedite_shipping GBP 160.00, alternative_supplier GBP 260.00, accept_delay GBP 500.00",
+        "evidence_ids": [
+          "recovery:SUP-ALPHA"
+        ],
+        "result": [
+          {
+            "strategy": "expedite_shipping",
+            "residual_penalty_gbp": "0.00",
+            "action_cost_gbp": "160.00",
+            "total_estimated_cost_gbp": "160.00",
+            "saving_vs_no_action_gbp": "340.00",
+            "details": "Expedite can recover up to 5 injected-delay days, never before the original restock date. Arrival 2026-10-27; capacity 40 units; allocated 20. Fee when used = GBP 100.00 + GBP 3.00/unit. ORD-1002: 20/20 shortfall units, complete 2026-10-27. Capacity follows promised-date/order-ID priority; partial orders wait for their remaining regular stock."
+          },
+          {
+            "strategy": "alternative_supplier",
+            "residual_penalty_gbp": "0.00",
+            "action_cost_gbp": "260.00",
+            "total_estimated_cost_gbp": "260.00",
+            "saving_vs_no_action_gbp": "240.00",
+            "details": "Use Northstar Components, lead time 2 days from evaluation. Arrival 2026-10-27; capacity 20 units; allocated 20. Fee when used = GBP 100.00 + GBP 8.00/unit. ORD-1002: 20/20 shortfall units, complete 2026-10-27. Capacity follows promised-date/order-ID priority; partial orders wait for their remaining regular stock."
+          },
+          {
+            "strategy": "accept_delay",
+            "residual_penalty_gbp": "500.00",
+            "action_cost_gbp": "0.00",
+            "total_estimated_cost_gbp": "500.00",
+            "saving_vs_no_action_gbp": "0.00",
+            "details": "Take no action. Uncovered units complete on 2026-11-01; estimated late-order penalties GBP 500.00."
+          }
+        ]
+      },
+      {
+        "call_id": "call-6",
+        "task_id": "T6",
+        "tool": "get_evidence",
+        "arguments": {
+          "evidence_id": "supplier:SUP-ALPHA"
+        },
+        "status": "ok",
+        "summary": "Alpha Components supplies SKU-SENSOR; scheduled replenishment 40 units on 2026-10-27. Injected delay 5 calendar days moves arrival to 2026-11-01.",
+        "evidence_ids": [
+          "supplier:SUP-ALPHA"
+        ],
+        "result": {
+          "evidence_id": "supplier:SUP-ALPHA",
+          "source": "zetaris://SENTRY_SUPPLIER_PORTAL.suppliers/SUP-ALPHA",
+          "description": "Alpha Components supplies SKU-SENSOR; scheduled replenishment 40 units on 2026-10-27. Injected delay 5 calendar days moves arrival to 2026-11-01."
+        }
+      },
+      {
+        "call_id": "call-7",
+        "task_id": "T7",
+        "tool": "get_supply_updates",
+        "arguments": {},
+        "status": "ok",
+        "summary": "{\"updates\":[{\"update_id\":\"alpha-delay-1\",\"case_id\":\"alpha-delay\",\"supplier_id\":\"SUP-ALPHA\",\"source\":\"supplier_portal\",\"observed_at_utc\":\"2026-10-25T10:00:00Z\",\"reported_arrival\":\"2026-11-01\",\"freshness_hours\":\"48\",\"description\":\"supplier_portal reports expected arrival 2026-11-01. Synthetic operational update.\",\"stale\":false,\"evidence_id\":\"update:alpha-delay-1\"},{\"update_id\":\"alpha-delay-2\",\"case_id\":\"alpha-delay\",\"supplier_id\":\"SUP-ALPHA\",\"source\":\"carrier_status\",\"observed_at_utc\":\"2026-10-25T10:00:00Z\",\"reported_arrival\":\"2026-11-01\",\"freshness_hours\":\"48\",\"description\":\"carrier_status reports expected arrival 2026-11-01. Synthetic operational update.\",\"stale\":false,\"evidence_id\":\"update:alpha-delay-2\"}],\"conflicting_arrival_estimates\":false,\"stale_update_ids\":[],\"blocks_recommendation\":false,\"reported_delay_range\":[5,5],\"reference_time_utc\":\"2026-10-25T12:00:00+00:00\",\"human_question\":null}",
+        "evidence_ids": [
+          "update:alpha-delay-1",
+          "update:alpha-delay-2"
+        ],
+        "result": {
+          "updates": [
+            {
+              "update_id": "alpha-delay-1",
+              "case_id": "alpha-delay",
+              "supplier_id": "SUP-ALPHA",
+              "source": "supplier_portal",
+              "observed_at_utc": "2026-10-25T10:00:00Z",
+              "reported_arrival": "2026-11-01",
+              "freshness_hours": "48",
+              "description": "supplier_portal reports expected arrival 2026-11-01. Synthetic operational update.",
+              "stale": false,
+              "evidence_id": "update:alpha-delay-1"
+            },
+            {
+              "update_id": "alpha-delay-2",
+              "case_id": "alpha-delay",
+              "supplier_id": "SUP-ALPHA",
+              "source": "carrier_status",
+              "observed_at_utc": "2026-10-25T10:00:00Z",
+              "reported_arrival": "2026-11-01",
+              "freshness_hours": "48",
+              "description": "carrier_status reports expected arrival 2026-11-01. Synthetic operational update.",
+              "stale": false,
+              "evidence_id": "update:alpha-delay-2"
+            }
+          ],
+          "conflicting_arrival_estimates": false,
+          "stale_update_ids": [],
+          "blocks_recommendation": false,
+          "reported_delay_range": [
+            5,
+            5
+          ],
+          "reference_time_utc": "2026-10-25T12:00:00+00:00",
+          "human_question": null
+        }
+      },
+      {
+        "call_id": "call-8",
+        "task_id": "T8",
+        "tool": "get_counterfactuals",
+        "arguments": {},
+        "status": "ok",
+        "summary": "{\"first_change\":{\"delay_days\":7,\"strategy\":\"alternative_supplier\",\"cost_gbp\":\"260.00\",\"comparison_strategy\":\"alternative_supplier\",\"comparison_cost_gbp\":\"260.00\",\"comparison_eligible\":true},\"assumption\":\"Injected calendar-day delay; a hypothetical sweep, not a forecast.\"}",
+        "evidence_ids": [
+          "recovery:SUP-ALPHA"
+        ],
+        "result": {
+          "points": [
+            {
+              "delay_days": 0,
+              "strategy": "accept_delay",
+              "cost_gbp": "0.00",
+              "comparison_strategy": "alternative_supplier",
+              "comparison_cost_gbp": "0.00",
+              "comparison_eligible": true
+            },
+            {
+              "delay_days": 1,
+              "strategy": "accept_delay",
+              "cost_gbp": "100.00",
+              "comparison_strategy": "alternative_supplier",
+              "comparison_cost_gbp": "260.00",
+              "comparison_eligible": true
+            },
+            {
+              "delay_days": 2,
+              "strategy": "expedite_shipping",
+              "cost_gbp": "160.00",
+              "comparison_strategy": "alternative_supplier",
+              "comparison_cost_gbp": "260.00",
+              "comparison_eligible": true
+            },
+            {
+              "delay_days": 3,
+              "strategy": "expedite_shipping",
+              "cost_gbp": "160.00",
+              "comparison_strategy": "alternative_supplier",
+              "comparison_cost_gbp": "260.00",
+              "comparison_eligible": true
+            },
+            {
+              "delay_days": 4,
+              "strategy": "expedite_shipping",
+              "cost_gbp": "160.00",
+              "comparison_strategy": "alternative_supplier",
+              "comparison_cost_gbp": "260.00",
+              "comparison_eligible": true
+            },
+            {
+              "delay_days": 5,
+              "strategy": "expedite_shipping",
+              "cost_gbp": "160.00",
+              "comparison_strategy": "alternative_supplier",
+              "comparison_cost_gbp": "260.00",
+              "comparison_eligible": true
+            },
+            {
+              "delay_days": 6,
+              "strategy": "expedite_shipping",
+              "cost_gbp": "260.00",
+              "comparison_strategy": "alternative_supplier",
+              "comparison_cost_gbp": "260.00",
+              "comparison_eligible": true
+            },
+            {
+              "delay_days": 7,
+              "strategy": "alternative_supplier",
+              "cost_gbp": "260.00",
+              "comparison_strategy": "alternative_supplier",
+              "comparison_cost_gbp": "260.00",
+              "comparison_eligible": true
+            },
+            {
+              "delay_days": 8,
+              "strategy": "alternative_supplier",
+              "cost_gbp": "260.00",
+              "comparison_strategy": "alternative_supplier",
+              "comparison_cost_gbp": "260.00",
+              "comparison_eligible": true
+            },
+            {
+              "delay_days": 9,
+              "strategy": "alternative_supplier",
+              "cost_gbp": "260.00",
+              "comparison_strategy": "alternative_supplier",
+              "comparison_cost_gbp": "260.00",
+              "comparison_eligible": true
+            },
+            {
+              "delay_days": 10,
+              "strategy": "alternative_supplier",
+              "cost_gbp": "260.00",
+              "comparison_strategy": "alternative_supplier",
+              "comparison_cost_gbp": "260.00",
+              "comparison_eligible": true
+            },
+            {
+              "delay_days": 11,
+              "strategy": "alternative_supplier",
+              "cost_gbp": "260.00",
+              "comparison_strategy": "alternative_supplier",
+              "comparison_cost_gbp": "260.00",
+              "comparison_eligible": true
+            },
+            {
+              "delay_days": 12,
+              "strategy": "alternative_supplier",
+              "cost_gbp": "260.00",
+              "comparison_strategy": "alternative_supplier",
+              "comparison_cost_gbp": "260.00",
+              "comparison_eligible": true
+            },
+            {
+              "delay_days": 13,
+              "strategy": "alternative_supplier",
+              "cost_gbp": "260.00",
+              "comparison_strategy": "alternative_supplier",
+              "comparison_cost_gbp": "260.00",
+              "comparison_eligible": true
+            },
+            {
+              "delay_days": 14,
+              "strategy": "alternative_supplier",
+              "cost_gbp": "260.00",
+              "comparison_strategy": "alternative_supplier",
+              "comparison_cost_gbp": "260.00",
+              "comparison_eligible": true
+            },
+            {
+              "delay_days": 15,
+              "strategy": "alternative_supplier",
+              "cost_gbp": "260.00",
+              "comparison_strategy": "alternative_supplier",
+              "comparison_cost_gbp": "260.00",
+              "comparison_eligible": true
+            },
+            {
+              "delay_days": 16,
+              "strategy": "alternative_supplier",
+              "cost_gbp": "260.00",
+              "comparison_strategy": "alternative_supplier",
+              "comparison_cost_gbp": "260.00",
+              "comparison_eligible": true
+            },
+            {
+              "delay_days": 17,
+              "strategy": "alternative_supplier",
+              "cost_gbp": "260.00",
+              "comparison_strategy": "alternative_supplier",
+              "comparison_cost_gbp": "260.00",
+              "comparison_eligible": true
+            },
+            {
+              "delay_days": 18,
+              "strategy": "alternative_supplier",
+              "cost_gbp": "260.00",
+              "comparison_strategy": "alternative_supplier",
+              "comparison_cost_gbp": "260.00",
+              "comparison_eligible": true
+            },
+            {
+              "delay_days": 19,
+              "strategy": "alternative_supplier",
+              "cost_gbp": "260.00",
+              "comparison_strategy": "alternative_supplier",
+              "comparison_cost_gbp": "260.00",
+              "comparison_eligible": true
+            },
+            {
+              "delay_days": 20,
+              "strategy": "alternative_supplier",
+              "cost_gbp": "260.00",
+              "comparison_strategy": "alternative_supplier",
+              "comparison_cost_gbp": "260.00",
+              "comparison_eligible": true
+            },
+            {
+              "delay_days": 21,
+              "strategy": "alternative_supplier",
+              "cost_gbp": "260.00",
+              "comparison_strategy": "alternative_supplier",
+              "comparison_cost_gbp": "260.00",
+              "comparison_eligible": true
+            },
+            {
+              "delay_days": 22,
+              "strategy": "alternative_supplier",
+              "cost_gbp": "260.00",
+              "comparison_strategy": "alternative_supplier",
+              "comparison_cost_gbp": "260.00",
+              "comparison_eligible": true
+            },
+            {
+              "delay_days": 23,
+              "strategy": "alternative_supplier",
+              "cost_gbp": "260.00",
+              "comparison_strategy": "alternative_supplier",
+              "comparison_cost_gbp": "260.00",
+              "comparison_eligible": true
+            },
+            {
+              "delay_days": 24,
+              "strategy": "alternative_supplier",
+              "cost_gbp": "260.00",
+              "comparison_strategy": "alternative_supplier",
+              "comparison_cost_gbp": "260.00",
+              "comparison_eligible": true
+            },
+            {
+              "delay_days": 25,
+              "strategy": "alternative_supplier",
+              "cost_gbp": "260.00",
+              "comparison_strategy": "alternative_supplier",
+              "comparison_cost_gbp": "260.00",
+              "comparison_eligible": true
+            },
+            {
+              "delay_days": 26,
+              "strategy": "alternative_supplier",
+              "cost_gbp": "260.00",
+              "comparison_strategy": "alternative_supplier",
+              "comparison_cost_gbp": "260.00",
+              "comparison_eligible": true
+            },
+            {
+              "delay_days": 27,
+              "strategy": "alternative_supplier",
+              "cost_gbp": "260.00",
+              "comparison_strategy": "alternative_supplier",
+              "comparison_cost_gbp": "260.00",
+              "comparison_eligible": true
+            },
+            {
+              "delay_days": 28,
+              "strategy": "alternative_supplier",
+              "cost_gbp": "260.00",
+              "comparison_strategy": "alternative_supplier",
+              "comparison_cost_gbp": "260.00",
+              "comparison_eligible": true
+            },
+            {
+              "delay_days": 29,
+              "strategy": "alternative_supplier",
+              "cost_gbp": "260.00",
+              "comparison_strategy": "alternative_supplier",
+              "comparison_cost_gbp": "260.00",
+              "comparison_eligible": true
+            },
+            {
+              "delay_days": 30,
+              "strategy": "alternative_supplier",
+              "cost_gbp": "260.00",
+              "comparison_strategy": "alternative_supplier",
+              "comparison_cost_gbp": "260.00",
+              "comparison_eligible": true
+            }
+          ],
+          "first_change_after_selected_delay": {
+            "delay_days": 7,
+            "strategy": "alternative_supplier",
+            "cost_gbp": "260.00",
+            "comparison_strategy": "alternative_supplier",
+            "comparison_cost_gbp": "260.00",
+            "comparison_eligible": true
+          },
+          "arrival_range_outcomes": [
+            {
+              "delay_days": 5,
+              "strategy": "expedite_shipping",
+              "cost_gbp": "160.00",
+              "comparison_strategy": "alternative_supplier",
+              "comparison_cost_gbp": "260.00",
+              "comparison_eligible": true
+            }
+          ],
+          "assumption": "Injected calendar-day delay; a hypothetical sweep, not a forecast.",
+          "provenance": {
+            "snapshot_hash": "430702c7a697ff45bd742a11aa2a08dd417053ef5751b24fcbae59dde0cc012c",
+            "acquired_from": "2026-10-27T20:08:14.062845+00:00",
+            "acquired_until": "2026-10-27T20:08:15.648287+00:00",
+            "data_source": "zetaris",
+            "synthetic": true,
+            "queries": [
+              {
+                "sources": [
+                  "SENTRY_SUPPLIER_PORTAL.suppliers"
+                ],
+                "query_id": "760bf559-e3c2-48a2-9801-fb6b2ad87771",
+                "rows": 3,
+                "time_used_ms": 174
+              },
+              {
+                "sources": [
+                  "SENTRY_SUPPLIER_PORTAL.inventory"
+                ],
+                "query_id": "4f0dece6-c6cb-47b0-83f2-11c6965e2e04",
+                "rows": 3,
+                "time_used_ms": 150
+              },
+              {
+                "sources": [
+                  "SENTRY_ERP_PG.customer_orders",
+                  "SENTRY_SUPPLIER_PORTAL.suppliers"
+                ],
+                "query_id": "f8a467f6-adcf-4a72-9501-43069a5c54ee",
+                "rows": 6,
+                "time_used_ms": 455
+              },
+              {
+                "query_id": "8826f801-a218-4176-b610-0820ec163014",
+                "sources": [
+                  "SENTRY_LOGISTICS_PORTAL.status_updates"
+                ],
+                "rows": 8,
+                "time_used_ms": 173
+              }
+            ],
+            "as_of_date": "2026-10-25",
+            "consistency": "Acquired over an interval; no cross-source atomicity is claimed."
+          }
+        }
+      },
+      {
+        "call_id": "call-9",
+        "task_id": "RETRY",
+        "tool": "get_evidence",
+        "arguments": {
+          "evidence_id": "inventory:SKU-SENSOR"
+        },
+        "status": "ok",
+        "summary": "10 on-hand units as of 2026-10-25; allocate by promised date, then order ID. Full-order completion is required; warehouse-to-customer transit is zero days.",
+        "evidence_ids": [
+          "inventory:SKU-SENSOR"
+        ],
+        "result": {
+          "evidence_id": "inventory:SKU-SENSOR",
+          "source": "zetaris://SENTRY_SUPPLIER_PORTAL.inventory/SKU-SENSOR",
+          "description": "10 on-hand units as of 2026-10-25; allocate by promised date, then order ID. Full-order completion is required; warehouse-to-customer transit is zero days."
+        }
+      },
+      {
+        "call_id": "call-10",
+        "task_id": "RETRY",
+        "tool": "get_evidence",
+        "arguments": {
+          "evidence_id": "order:ORD-1001"
+        },
+        "status": "ok",
+        "summary": "ORD-1001: 10 units due 2026-10-26; stock allocation 10, shortfall 0; complete 2026-10-25; 0 days late \u00d7 GBP 50.00/order/day = GBP 0.00. Penalty applies to the whole order, not each unit.",
+        "evidence_ids": [
+          "order:ORD-1001"
+        ],
+        "result": {
+          "evidence_id": "order:ORD-1001",
+          "source": "zetaris://SENTRY_ERP_PG.customer_orders/ORD-1001",
+          "description": "ORD-1001: 10 units due 2026-10-26; stock allocation 10, shortfall 0; complete 2026-10-25; 0 days late \u00d7 GBP 50.00/order/day = GBP 0.00. Penalty applies to the whole order, not each unit."
+        }
+      },
+      {
+        "call_id": "call-11",
+        "task_id": "RETRY",
+        "tool": "get_evidence",
+        "arguments": {
+          "evidence_id": "order:ORD-1002"
+        },
+        "status": "ok",
+        "summary": "ORD-1002: 20 units due 2026-10-27; stock allocation 0, shortfall 20; complete 2026-11-01; 5 days late \u00d7 GBP 100.00/order/day = GBP 500.00. Penalty applies to the whole order, not each unit.",
+        "evidence_ids": [
+          "order:ORD-1002"
+        ],
+        "result": {
+          "evidence_id": "order:ORD-1002",
+          "source": "zetaris://SENTRY_ERP_PG.customer_orders/ORD-1002",
+          "description": "ORD-1002: 20 units due 2026-10-27; stock allocation 0, shortfall 20; complete 2026-11-01; 5 days late \u00d7 GBP 100.00/order/day = GBP 500.00. Penalty applies to the whole order, not each unit."
+        }
+      },
+      {
+        "call_id": "call-12",
+        "task_id": "RETRY",
+        "tool": "get_evidence",
+        "arguments": {
+          "evidence_id": "recovery:SUP-ALPHA"
+        },
+        "status": "ok",
+        "summary": "Expedite: 5 days saved, 40 units, GBP 100.00 + 3.00/unit. Alternative: 2 days, 20 units, GBP 100.00 + 8.00/unit. Costs are incremental fees plus residual penalties; common base procurement, taxes, weekends, cancellation, split-delivery benefits, and transit are excluded. Unused regular/alternative units have no modeled charge. Recovery fees are hypothetical.",
+        "evidence_ids": [
+          "recovery:SUP-ALPHA"
+        ],
+        "result": {
+          "evidence_id": "recovery:SUP-ALPHA",
+          "source": "zetaris://SENTRY_SUPPLIER_PORTAL.suppliers/SUP-ALPHA",
+          "description": "Expedite: 5 days saved, 40 units, GBP 100.00 + 3.00/unit. Alternative: 2 days, 20 units, GBP 100.00 + 8.00/unit. Costs are incremental fees plus residual penalties; common base procurement, taxes, weekends, cancellation, split-delivery benefits, and transit are excluded. Unused regular/alternative units have no modeled charge. Recovery fees are hypothetical."
+        }
+      }
+    ],
+    "attempts": [
+      {
+        "attempt": 1,
+        "outcome": "validated",
+        "claim": {
+          "recommended_strategy": "expedite_shipping",
+          "affected_order_ids": [
+            "ORD-1002"
+          ],
+          "penalty_exposure_gbp": "500.00",
+          "recommended_total_cost_gbp": "160.00",
+          "evidence_ids": [
+            "supplier:SUP-ALPHA",
+            "inventory:SKU-SENSOR",
+            "order:ORD-1001",
+            "order:ORD-1002",
+            "recovery:SUP-ALPHA"
+          ],
+          "explanation": "Supplier Alpha Components' restock is 5 days late, resulting in a late order (ORD-1002) with a penalty exposure of \u00a3500.00. The expedite shipping option is the cheapest at \u00a3160.00, which would cost \u00a3160.00 to expedite the shipment while saving a penalty of \u00a3340.00. This strategy minimizes the exposure to penalties while maintaining the necessary supply of the component.",
+          "assumptions": [
+            "The supplier's restock on 2026-10-27 will indeed arrive 5 days late, as reported."
+          ]
+        },
+        "feedback": []
+      }
+    ],
+    "critiques": [
+      {
+        "supported": true,
+        "issues": [],
+        "missing_tools": []
+      }
+    ],
+    "validation": {
+      "passed": true,
+      "checks": [
+        {
+          "check": "required_tools_called",
+          "passed": true,
+          "detail": "all required tools returned data"
+        },
+        {
+          "check": "strategy_exists",
+          "passed": true,
+          "detail": "claimed 'expedite_shipping'; options ['accept_delay', 'alternative_supplier', 'expedite_shipping']"
+        },
+        {
+          "check": "strategy_matches_calculation",
+          "passed": true,
+          "detail": "claimed 'expedite_shipping'; deterministic ranking puts expedite_shipping first"
+        },
+        {
+          "check": "order_ids_valid",
+          "passed": true,
+          "detail": "all claimed order ids exist"
+        },
+        {
+          "check": "affected_orders_match",
+          "passed": true,
+          "detail": "claimed ['ORD-1002']; simulation found ['ORD-1002']"
+        },
+        {
+          "check": "exposure_matches",
+          "passed": true,
+          "detail": "claimed '500.00'; calculated 500.00"
+        },
+        {
+          "check": "cost_matches",
+          "passed": true,
+          "detail": "claimed '160.00'; calculated 160.00"
+        },
+        {
+          "check": "evidence_exists",
+          "passed": true,
+          "detail": "every cited evidence id resolved via get_evidence"
+        },
+        {
+          "check": "evidence_supports_recommendation",
+          "passed": true,
+          "detail": "recovery offer and every affected order are cited"
+        },
+        {
+          "check": "explanation_grounded",
+          "passed": true,
+          "detail": "every figure and order in the explanation comes from tool outputs"
+        }
+      ],
+      "unresolved": []
+    },
+    "model": {
+      "runtime": "meterless-nightshift",
+      "requested_model": "meterless/local",
+      "models_used": [
+        "local-runtime/qwen2.5-coder-3b-instruct"
+      ],
+      "providers": [
+        "local-runtime"
+      ],
+      "receipt_ids": [
+        "rcpt_req_daf91mk1",
+        "rcpt_req_t7obvqow",
+        "rcpt_req_zs3290qz"
+      ],
+      "signed_receipts": 3,
+      "calls": 3,
+      "prompt_tokens": 6128,
+      "completion_tokens": 809
+    },
+    "memory": {
+      "engine": "H-MEM",
+      "implementation": "@meterless/hmem-reference 0.1.0 (Meterless/Meterless@1742dec)",
+      "persistent": true,
+      "query": "submission-workspace Supplier disruption SUP-ALPHA Alpha Components SKU-SENSOR delayed 5 days snapshot:430702c7a697ff45bd742a11aa2a08dd417053ef5751b24fcbae59dde0cc012c",
+      "recalled": [],
+      "stored_memory_id": "mem-1",
+      "feedback": [],
+      "conflicts": [],
+      "ledger": {
+        "create": 1
+      },
+      "current_snapshot_hash": "430702c7a697ff45bd742a11aa2a08dd417053ef5751b24fcbae59dde0cc012c",
+      "scenario_inputs": {
+        "supplier_id": "SUP-ALPHA",
+        "delay_days": 5,
+        "case_id": "alpha-delay",
+        "max_action_cost_gbp": null,
+        "max_late_days": null,
+        "compare_strategy": "alternative_supplier"
+      },
+      "comparison_note": "All current amounts were recalculated; remembered recommendations do not override current evidence.",
+      "changed_strategy_memory_ids": []
+    },
+    "hypotheses": [
+      "The supplier's restock on 2026-10-27 will indeed arrive 5 days late, as reported."
+    ],
+    "disclaimer": "Synthetic business records queried through the labelled data source. AI explanations are checked against deterministic calculations. Human recommendations only; no orders or shipments are executed.",
+    "elapsed_seconds": 15.543
+  },
+  "error": null,
+  "cancelled": 0,
+  "review": null
+}

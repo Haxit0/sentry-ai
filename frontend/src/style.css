@@ -8,6 +8,14 @@
 .agent-panel summary { cursor: pointer; font-weight: 600; padding: 8px 0; }
 .agent-panel pre { white-space: pre-wrap; overflow-wrap: anywhere; max-height: 320px; overflow: auto; font-size: 12px; }
 .agent-error { padding: 16px; background: #fff3ed; border-radius: 10px; margin-top: 16px; }
+.v2-controls { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(240px,100%),1fr)); gap: 20px; margin: 20px 0; }
+.v2-controls label { display: flex; flex-direction: column; gap: 8px; font-weight: 600; }
+.v2-controls input, .v2-controls select, .agent-panel textarea { min-width: 0; width: 100%; padding: 10px; border: 1px solid #c5d9d1; border-radius: 6px; background: white; }
+.v2-actions { display: flex; gap: 16px; flex-wrap: wrap; margin: 16px 0; align-items: center; }
+.v2-actions button, .v2-actions a { padding: 10px 16px; border: 1px solid #c5d9d1; border-radius: 6px; }
+.agent-panel table { width: 100%; border-collapse: collapse; }
+.agent-panel td, .agent-panel th { padding: 10px; text-align: left; border-bottom: 1px solid #e2e9e6; }
+.table-scroll { overflow-x: auto; }
 
 :root {
   font-family: "DM Sans", Arial, sans-serif;

@@ -55,3 +55,7 @@ Thumbs.db
 *.pid
 *.swp
 *.tmp
+
+# Private presentation validation staging
+.chart-data-*/
+.codex-finalizer/

@@ -4,6 +4,7 @@ from fastapi import Depends, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.agents.router import router as investigations_router
+from app.v2.router import router as submission_router
 from app.data.repository import FixtureRepository
 from app.schemas import HealthResponse, Order, SimulationRequest, SimulationResponse, Supplier
 from app.services.simulation import UnknownSupplierError, simulate
@@ -16,6 +17,7 @@ app.add_middleware(
     allow_methods=["GET", "POST"], allow_headers=["Content-Type"],
 )
 app.include_router(investigations_router)
+app.include_router(submission_router)
 
 
 def get_repository() -> FixtureRepository:
