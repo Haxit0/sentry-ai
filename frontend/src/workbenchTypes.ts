@@ -1,0 +1,14 @@
+import type { Simulation, Strategy } from "./types";
+
+export type Input = { supplier_id: string; delay_days: number; case_id: string; max_action_cost_gbp: string | null; max_late_days: number | null; compare_strategy: Strategy };
+export type Case = { case_id: string; name: string; supplier_id: string; delay_days: number; max_action_cost_gbp?: string; max_late_days?: number };
+export type Provenance = { snapshot_hash: string; data_source: string; synthetic: boolean; acquired_from: string; acquired_until: string; queries: { query_id: string; sources: string[]; rows: number }[] };
+export type Option = Simulation["recovery_options"][number] & { eligible: boolean; max_remaining_late_days: number; exclusion_reasons: string[] };
+export type Point = { delay_days: number; strategy: Strategy | null; cost_gbp: string | null; comparison_cost_gbp: string; comparison_eligible: boolean };
+export type Assessment = { simulation: Simulation; options: Option[]; recommendation: Strategy | null; feasibility: string; provenance: Provenance };
+export type Sweep = { points: Point[]; first_change_after_selected_delay: Point | null; assumption: string; arrival_range_outcomes: Point[] };
+export type Uncertainty = { updates: { update_id: string; source: string; reported_arrival: string; observed_at_utc: string; stale: boolean; description: string }[]; blocks_recommendation: boolean; human_question: string | null; reported_delay_range: number[] | null };
+export type Decision = Assessment & { counterfactuals: Sweep; uncertainty: Uncertainty };
+export type Report = { status: string; recommended_strategy: Strategy | null; explanation: string | null; decision: Assessment; counterfactuals: Sweep; uncertainty: Uncertainty; provenance: Provenance; validation: { passed: boolean; unresolved: string[]; checks?: { check: string; passed: boolean; detail: string }[] }; supporting_evidence_ids: string[]; plan: { task_id: string; question: string; tool: string; origin: string }[]; tool_calls: { call_id: string; tool: string; status: string; summary: string; result: unknown }[]; attempts: unknown[]; critiques: unknown[]; model: { models_used: string[]; calls: number; signed_receipts: number; receipt_ids: string[] } | null; memory: { recalled: { memory_id: string; content: string; use: string }[]; stored_memory_id: string | null; feedback: unknown[]; conflicts: unknown[] } | null; disclaimer: string };
+export type Run = { id: string; status: string; request: Input; events: { at: string; agent: string; message: string }[]; report: Report | null; error: string | null; cancelled: number; review: { action: string; note: string; effect: string }[] | null };
+export type Status = { data_mode: string; zetaris: { status: string; reason?: string }; nightshift: { status: string; requested_model?: string; reason?: string }; hmem: { status: string; reason?: string } };

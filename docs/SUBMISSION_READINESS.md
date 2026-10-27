@@ -1,6 +1,6 @@
 # Submission readiness â€” 27 October 2026
 
-The functional sponsor chain is verified locally. Final submission remains **incomplete** until the narrated video, final UI pass, team confirmation and judge-facing links are complete. The working deadline is 27 October, 23:45 UTC. No winning outcome is guaranteed.
+The functional sponsor chain is verified locally. Final submission remains **incomplete** until the narrated video, team confirmation and judge-facing links are complete. The UI pass is complete; see [UI review](UI_REVIEW.md). The working deadline is 27 October, 23:45 UTC. No winning outcome is guaranteed.
 
 ## Requirement audit
 
@@ -29,7 +29,7 @@ The functional sponsor chain is verified locally. Final submission remains **inc
 | README, Track 2 description, disclosures | Verified | [README](../README.md), [description and disclosures](PROJECT_DESCRIPTION.md); Cursor unconfirmed, not claimed |
 | Eight-slide editable deck and PDF | Verified | [PPTX](../submission/Sentry_AI_Submission_Deck_Final.pptx), [PDF](../submission/Sentry_AI_Submission_Deck_Final.pdf); package/layout checks and visual PDF review |
 | 3:15 narration script and functional shot list | Verified | [Demo script](DEMO_SCRIPT.md); show real feedback, queries, calls, memory and decision |
-| Final visual redesign | Incomplete by agreed sequencing | Next pass with user |
+| Final visual redesign | Verified | [UI and navigation review](UI_REVIEW.md); responsive layouts and 30 browser tests |
 | Final narrated 1â€“4 minute MP4, audio, primary/backup copies | Incomplete by agreed sequencing | Record together after UI pass; user narration; no finished recording is claimed |
 | Anonymous judge-facing video/Drive links | Incomplete | Upload and test without account permissions after recording |
 | Official HackOS roster, track, repository access and final submission | Incomplete | Human confirmation and final HackOS action required |
@@ -39,7 +39,7 @@ Published review: [GitHub PR #8](https://github.com/Haxit0/sentry-ai/pull/8). No
 ## Final local verification
 
 - Backend: **180 passed, 3 opt-in live checks skipped**; live sponsor checks were run separately.
-- Browser: **21 passed** using installed Chrome; production build and typecheck passed.
+- Browser: **30 passed** using installed Chrome; production build and typecheck passed.
 - Release confirmation after final provenance storage: [9/9 expected outcomes, 6.084s median](evidence/qwen3b-release-provenance.json), with recall on the repeated case. The deck retains the original matched model-selection comparison.
 - Acceptance calculations: [all eight cases](evidence/acceptance-cases.json).
 - Matched memory test: cold median **5.959s**, warm median **6.575s**, two pairs; recall worked but no speed gain.

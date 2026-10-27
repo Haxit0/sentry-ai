@@ -82,4 +82,6 @@ See [readiness and executed evidence](docs/SUBMISSION_READINESS.md), [API v2](do
 
 ## Submission
 
+The dashboard follows Scenario → Investigation → Decision, with a delay explorer, searchable history and expandable evidence. See the [UI verification](docs/UI_REVIEW.md).
+
 The final narrated MP4 follows the UI pass. Add video and deck URLs after upload and anonymous-access verification. Confirm the team roster, repository access and disclosure text before the final HackOS submission. The working cutoff is **27 October 2026, 23:45 UTC**. No customer savings, production deployment or unexecuted tests are claimed.
