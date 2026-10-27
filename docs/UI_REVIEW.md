@@ -1,4 +1,6 @@
-# UI and navigation pass — 27 October 2026
+# Earlier UI checkpoint — 27 October 2026
+
+Superseded by the [guided task flow](GUIDED_UX.md) after user usability feedback.
 
 The workbench now follows three visible steps: **Scenario → Investigation → Decision**. Desktop navigation and a sticky three-step bar lead to the same sections. The phone layout keeps the three-step bar and a history button; no side drawer is required for the main task.
 

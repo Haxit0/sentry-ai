@@ -1,0 +1,33 @@
+{
+  "run_id": "run-31d58c0edec3",
+  "status": "validated",
+  "ui_flow": "Choose a problem \u2192 Check options \u2192 Your answer; automatic advance verified in browser",
+  "recommended_strategy": "expedite_shipping",
+  "model": {
+    "runtime": "meterless-nightshift",
+    "requested_model": "local-runtime/qwen2.5-coder-3b-instruct",
+    "models_used": [
+      "local-runtime/qwen2.5-coder-3b-instruct"
+    ],
+    "providers": [
+      "local-runtime"
+    ],
+    "receipt_ids": [
+      "rcpt_req_lkn4x1au",
+      "rcpt_req_h12feski",
+      "rcpt_req_um988v0m",
+      "rcpt_req_9um9w4hp",
+      "rcpt_req_z00da7mq"
+    ],
+    "signed_receipts": 5,
+    "calls": 5,
+    "prompt_tokens": 6791,
+    "completion_tokens": 1269,
+    "cache_hits": 0
+  },
+  "data_source": "zetaris",
+  "snapshot_hash": "430702c7a697ff45bd742a11aa2a08dd417053ef5751b24fcbae59dde0cc012c",
+  "query_count": 4,
+  "memory_recalled": 3,
+  "memory_stored": true
+}

@@ -1,121 +1,122 @@
 import { expect, test } from "@playwright/test";
+import { fileURLToPath } from "node:url";
 
 test.setTimeout(120_000);
-
-test.beforeEach(async ({ page }) => {
-  await page.route("https://fonts.googleapis.com/**", route => route.abort());
+async function openStepTwo(page:import("@playwright/test").Page) {
   await page.goto("/");
-  await expect(page.getByLabel("Supplier", { exact: true })).toBeEnabled({timeout:90_000});
-  await expect(page.getByLabel("Supplier", { exact: true }).locator("option")).toHaveCount(3);
+  await expect(page.getByRole("button",{name:"A delivery is late"})).toBeEnabled({timeout:90_000});
+  await page.getByRole("button",{name:"Continue",exact:true}).click();
+  await expect(page.getByLabel("Supplier",{exact:true})).toBeEnabled({timeout:90_000});
+}
+async function preview(page:import("@playwright/test").Page) {
+  await page.getByRole("button",{name:"Just compare costs, without AI"}).click();
+  await expect(page.getByRole("heading",{name:"Here's your next move."})).toBeVisible();
+}
+test.beforeEach(async({page})=>{await page.route("https://fonts.googleapis.com/**",r=>r.abort());});
+
+test("first visit shows one clear starting point and no wall of results",async({page})=>{
+  await page.goto("/");
+  await expect(page.getByRole("heading",{name:"What do you need help with?"})).toBeVisible();
+  await expect(page.getByRole("button",{name:"Continue",exact:true})).toBeVisible();
+  await expect(page.getByRole("slider")).toHaveCount(0);
+  await expect(page.getByRole("region",{name:"Decision comparison"})).toHaveCount(0);
+  await expect(page.getByRole("button",{name:"Find my best option"})).toHaveCount(0);
 });
 
-test("real v2 comparison explains cost, alternatives and source provenance", async ({ page }) => {
-  await page.getByRole("button", { name: "Compare calculated options" }).click();
-  const comparison=page.getByRole("region",{name:"Decision comparison"});
-  await expect(comparison).toContainText("£500.00");
-  await expect(comparison).toContainText("£160.00");
+test("a cost preview has one plain answer and hides the details until requested",async({page})=>{
+  await openStepTwo(page);await preview(page);
+  const answer=page.getByRole("article",{name:"Your answer"});
+  await expect(answer).toContainText("Speed up the shipment");
+  await expect(answer).toContainText("£160.00");
+  await expect(answer).toContainText("£500.00");
+  await expect(answer).toContainText("AI was not used");
+  await expect(page.getByRole("region",{name:"Decision comparison"})).not.toBeVisible();
+  await page.getByText("Compare the three options",{exact:true}).click();
+  await expect(page.getByRole("region",{name:"Decision comparison"})).toContainText("£260.00");
+  await page.getByText("What if the delay changes?",{exact:true}).click();
   await expect(page.getByRole("region",{name:"Changing decisions"})).toContainText("At 7 days");
-  await page.getByRole("region",{name:"Source uncertainty"}).locator("summary").filter({hasText:"Data provenance"}).click();
-  await expect(page.getByRole("region",{name:"Source uncertainty"})).toContainText("Snapshot");
+  await page.getByText("See how we reached this",{exact:true}).click();
+  const evidence=page.getByRole("region",{name:"Source uncertainty"});
+  await evidence.locator("summary").filter({hasText:"Data provenance"}).click();
+  await expect(evidence).toContainText("Snapshot");
 });
 
-test("budget and deadline can leave no feasible recovery", async ({ page }) => {
-  await page.getByLabel("Demonstration case").selectOption("budget-blocked");
-  await page.getByRole("button", { name: "Compare calculated options" }).click();
-  await expect(page.getByRole("region",{name:"Decision comparison"})).toContainText("No feasible recovery under these constraints");
-  await expect(page.getByRole("region",{name:"Decision comparison"})).toContainText("exceeds the budget");
+test("budget case never presents an unsuitable plan as acceptable",async({page})=>{
+  await page.goto("/");await page.getByRole("button",{name:"Recovery costs too much"}).click();
+  await page.getByRole("button",{name:"Continue",exact:true}).click();
+  await expect(page.getByRole("heading",{name:"What are your recovery limits?"})).toBeVisible();
+  await expect(page.getByLabel("Maximum spending")).toBeVisible();
+  await expect(page.getByRole("slider",{name:"Delivery delay"})).toHaveCount(0);
+  await page.getByRole("button",{name:"Just compare costs, without AI"}).click();
+  await expect(page.getByRole("article",{name:"Your answer"})).toContainText("No option fits your budget and deadline");
+  await expect(page.getByRole("button",{name:"Approve this plan"})).toHaveCount(0);
 });
 
-test("source disagreement is explicit and firm recommendation is withheld", async ({ page }) => {
-  await page.getByLabel("Demonstration case").selectOption("conflicting-eta");
-  await page.getByRole("button", { name: "Compare calculated options" }).click();
-  await expect(page.getByRole("region",{name:"Source uncertainty"})).toContainText("Confirm the current expected arrival");
-  await expect(page.getByRole("region",{name:"Source uncertainty"})).toContainText("3–5-day delay range");
-  await expect(page.getByRole("region",{name:"Decision comparison"})).toContainText("withheld");
+test("conflicting sources lead with the question a human must answer",async({page})=>{
+  await page.goto("/");await page.getByRole("button",{name:"Arrival reports disagree"}).click();
+  await page.getByRole("button",{name:"Continue",exact:true}).click();
+  await expect(page.getByRole("heading",{name:"Let's check the arrival reports."})).toBeVisible();
+  await expect(page.getByText("Supplier's update",{exact:true})).toBeVisible({timeout:90_000});
+  await expect(page.getByText("Carrier's update",{exact:true})).toBeVisible();
+  await expect(page.getByRole("slider",{name:"Delivery delay"})).toHaveCount(0);
+  await page.getByRole("button",{name:"Preview reports, without AI"}).click();
+  await expect(page.getByRole("heading",{name:"One detail needs checking."})).toBeVisible();
+  await expect(page.getByRole("article",{name:"Your answer"})).toContainText("Confirm the current expected arrival");
+  await expect(page.getByRole("button",{name:"Approve this plan"})).toHaveCount(0);
 });
 
-test("a queued AI run can be cancelled without presenting a recommendation", async ({ page }) => {
-  const run={id:"run-ui-test",status:"running",request:{supplier_id:"SUP-ALPHA",delay_days:5,case_id:"alpha-delay",max_action_cost_gbp:null,max_late_days:null,compare_strategy:"alternative_supplier"},events:[{at:"test",agent:"planner",message:"Testing queued run display"}],report:null,error:null,cancelled:0,review:null};
-  await page.route("**/api/v2/investigation-runs",route=>route.request().method()==="POST"?route.fulfill({status:202,contentType:"application/json",body:JSON.stringify(run)}):route.continue());
-  await page.route("**/api/v2/investigation-runs/run-ui-test",route=>route.fulfill({contentType:"application/json",body:JSON.stringify(run)}));
-  await page.route("**/api/v2/investigation-runs/run-ui-test/cancel",route=>route.fulfill({contentType:"application/json",body:JSON.stringify({...run,status:"cancelled",cancelled:1})}));
-  await page.getByRole("button",{name:"Run AI investigation"}).click();
-  await expect(page.getByRole("region",{name:"AI investigation"})).toContainText("Run status: running");
-  await page.getByRole("button",{name:"Cancel investigation"}).click();
-  await expect(page.getByRole("region",{name:"AI investigation"})).toContainText("Run status: cancelled");
-  await expect(page.getByRole("button",{name:"Approve recommendation"})).toBeDisabled();
+test("delay buttons change the value and exploring a chart doesn't change inputs",async({page})=>{
+  await openStepTwo(page);
+  await page.getByRole("button",{name:"Increase delay by one day"}).click();
+  await expect(page.getByRole("slider",{name:"Delivery delay"})).toHaveValue("6");
+  await page.getByRole("button",{name:"Reduce delay by one day"}).click();await preview(page);
+  await page.getByText("What if the delay changes?",{exact:true}).click();
+  const slider=page.getByRole("slider",{name:"Explore calculated delay"});await slider.press("End");await expect(slider).toHaveValue("30");
+  await page.getByRole("button",{name:"Change the details"}).click();
+  await expect(page.getByRole("slider",{name:"Delivery delay"})).toHaveValue("5");
 });
 
-test("narrow-screen workbench does not overflow", async ({ page }) => {
-  await page.setViewportSize({width:375,height:812});
-  await page.getByRole("button", { name: "Compare calculated options" }).click();
-  await expect(page.getByRole("region",{name:"Decision comparison"})).toBeVisible();
-  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBeTruthy();
+test("a running check is visible, cancellable, and never offers approval",async({page})=>{
+  await openStepTwo(page);
+  const run={id:"run-guided-test",status:"running",request:{supplier_id:"SUP-ALPHA",delay_days:5,case_id:"alpha-delay",max_action_cost_gbp:null,max_late_days:null,compare_strategy:"alternative_supplier"},events:[{at:"test",agent:"planner",message:"Choosing evidence questions"}],report:null,error:null,cancelled:0,review:null};
+  await page.route("**/api/v2/investigation-runs",r=>r.request().method()==="POST"?r.fulfill({status:202,contentType:"application/json",body:JSON.stringify(run)}):r.continue());
+  await page.route("**/api/v2/investigation-runs/run-guided-test",r=>r.fulfill({contentType:"application/json",body:JSON.stringify(run)}));
+  await page.route("**/api/v2/investigation-runs/run-guided-test/cancel",r=>r.fulfill({contentType:"application/json",body:JSON.stringify({...run,status:"cancelled",cancelled:1})}));
+  await page.getByRole("button",{name:"Find my best option"}).click();
+  await expect(page.getByRole("heading",{name:"We're checking your options."})).toBeVisible();
+  await expect(page.getByRole("slider")).toHaveCount(0);
+  await page.getByRole("button",{name:"Cancel check"}).click();
+  await expect(page.getByText("Check cancelled. You can change the details and try again.")).toBeVisible();
+  await expect(page.getByRole("button",{name:"Approve this plan"})).toHaveCount(0);
 });
 
-test("step navigation reaches each section and history closes with Escape", async ({ page }) => {
-  const steps=page.getByRole("navigation",{name:"Investigation steps"});
-  await steps.getByRole("link",{name:/03 Decision/}).click();
-  await expect(page).toHaveURL(/#results$/);
-  await expect(page.getByRole("heading",{name:"Make an informed decision"})).toBeInViewport();
-  await steps.getByRole("link",{name:/01 Scenario/}).click();
-  await expect(page).toHaveURL(/#scenario$/);
-  await page.getByRole("button",{name:"Open run history",exact:true}).click();
-  await expect(page.getByRole("dialog",{name:"Investigation history"})).toBeVisible();
-  await page.keyboard.press("Escape");
-  await expect(page.getByRole("dialog",{name:"Investigation history"})).not.toBeVisible();
+test("past checks support search and Escape without leaving the guided task",async({page})=>{
+  await page.route("**/api/v2/investigation-runs",r=>r.fulfill({contentType:"application/json",body:JSON.stringify([{id:"run-example-a",status:"validated",created_at:"2026-10-27T20:00:00Z"},{id:"run-example-b",status:"cancelled",created_at:"2026-10-27T19:00:00Z"}])}));
+  await page.goto("/");await page.getByRole("button",{name:"Past checks",exact:true}).click();
+  const dialog=page.getByRole("dialog",{name:"Past checks"});await dialog.getByRole("textbox",{name:"Search past checks"}).fill("validated");
+  await expect(dialog).toContainText("run-example-a");await expect(dialog).not.toContainText("run-example-b");
+  await page.keyboard.press("Escape");await expect(dialog).not.toBeVisible();
+  await expect(page.getByRole("heading",{name:"What do you need help with?"})).toBeVisible();
 });
 
-test("exploring the calculated delay chart does not alter scenario inputs", async ({ page }) => {
-  await page.getByRole("button",{name:"Compare calculated options"}).click();
-  const chartSlider=page.getByRole("slider",{name:"Explore calculated delay"});
-  await chartSlider.focus();
-  await chartSlider.press("End");
-  await expect(chartSlider).toHaveValue("30");
-  await expect(page.getByRole("slider",{name:"Supplier delay: 5 days"})).toHaveValue("5");
-  await expect(page.getByRole("region",{name:"Changing decisions"})).toContainText("Exploring this chart does not change your scenario");
+test("unavailable data keeps the main check disabled with an explicit error",async({page})=>{
+  await page.route("**/api/v2/workspace",r=>r.fulfill({status:503,contentType:"application/json",body:JSON.stringify({detail:"Data source unavailable for this test"})}));
+  await page.goto("/");await page.getByRole("button",{name:"Continue",exact:true}).click();
+  await expect(page.getByRole("alert")).toContainText("Data source unavailable");
+  await expect(page.getByRole("button",{name:"Find my best option"})).toBeDisabled();
 });
 
-test("edited inputs leave a clear warning on the previous calculation", async ({ page }) => {
-  await page.getByRole("button",{name:"Compare calculated options"}).click();
-  await expect(page.getByRole("region",{name:"Decision comparison"})).toContainText("£160.00");
-  await page.getByRole("slider",{name:"Supplier delay: 5 days"}).press("ArrowRight");
-  await expect(page.getByText("Your controls have changed.")).toBeVisible();
-  await expect(page.getByRole("region",{name:"Decision comparison"})).toContainText("£160.00");
-});
-
-test("history can be searched on a narrow screen with no page overflow", async ({ page }) => {
-  await page.setViewportSize({width:375,height:812});
-  await page.route("**/api/v2/investigation-runs",route=>route.fulfill({contentType:"application/json",body:JSON.stringify([{id:"run-verified-example",status:"validated",created_at:"2026-10-27T20:00:00Z"},{id:"run-cancelled-example",status:"cancelled",created_at:"2026-10-27T19:00:00Z"}])}));
-  await page.getByRole("button",{name:"Refresh connections and history"}).click();
-  await page.getByRole("button",{name:"Open run history",exact:true}).click();
-  const dialog=page.getByRole("dialog",{name:"Investigation history"});
-  await dialog.getByRole("textbox",{name:"Search investigation history"}).fill("validated");
-  await expect(dialog.getByRole("button",{name:"run-verified-example"})).toBeVisible();
-  await expect(dialog.getByRole("button",{name:"run-cancelled-example"})).toHaveCount(0);
-  await page.getByRole("button",{name:"Close history",exact:true}).click();
-  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBeTruthy();
-});
-
-test("a source failure is explicit and keeps investigation actions unavailable", async ({ page }) => {
-  await page.route("**/api/v2/workspace",route=>route.fulfill({status:503,contentType:"application/json",body:JSON.stringify({detail:"Zetaris source unavailable for this test"})}));
-  await page.reload();
-  await expect(page.getByRole("alert")).toContainText("Zetaris source unavailable");
-  await expect(page.getByRole("button",{name:"Run AI investigation"})).toBeDisabled();
-  await expect(page.getByRole("button",{name:"Compare calculated options"})).toBeDisabled();
-});
-
-for (const width of [1440,768,375,320]) {
-  test(`redesigned workspace remains usable at ${width}px`, async ({page}) => {
-    await page.emulateMedia({reducedMotion:"reduce"});
-    await page.setViewportSize({width,height:1000});
-    await page.getByRole("button",{name:"Compare calculated options"}).click();
-    await expect(page.getByRole("region",{name:"Decision comparison"})).toBeVisible();
+for(const width of [1440,768,375,320]) {
+  test(`guided task fits ${width}px with one screen visible at a time`,async({page})=>{
+    await page.emulateMedia({reducedMotion:"reduce"});await page.setViewportSize({width,height:1000});
+    await page.goto("/");await expect(page.getByRole("button",{name:"Continue",exact:true})).toBeEnabled();
     expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBeTruthy();
-    await page.getByRole("navigation",{name:"Investigation steps"}).getByRole("link",{name:/01 Scenario/}).click();
-    await page.keyboard.press("Control+Home");
-    await page.screenshot({path:`../local_data/ui-review/workspace-${width}.png`,fullPage:false});
-    await page.getByRole("navigation",{name:"Investigation steps"}).getByRole("link",{name:/03 Decision/}).click();
-    await page.screenshot({path:`../local_data/ui-review/decision-${width}.png`,fullPage:false});
+    await page.screenshot({path:fileURLToPath(new URL(`../../local_data/guide-review/start-${width}.png`,import.meta.url))});
+    await page.getByRole("button",{name:"Continue",exact:true}).click();
+    await expect(page.getByRole("button",{name:"Find my best option"})).toBeEnabled({timeout:90000});
+    await page.screenshot({path:fileURLToPath(new URL(`../../local_data/guide-review/setup-${width}.png`,import.meta.url))});
+    await preview(page);expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBeTruthy();
+    await page.screenshot({path:fileURLToPath(new URL(`../../local_data/guide-review/answer-${width}.png`,import.meta.url))});
+    await expect(page.getByRole("slider",{name:"Delivery delay"})).toHaveCount(0);
   });
 }
