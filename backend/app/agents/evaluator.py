@@ -107,15 +107,17 @@ def evaluate(claim: Claim, tools: InvestigationTools) -> Evaluation:
     invented = sorted({f"{amount:.2f}" for amount in stated if amount is not None and amount not in allowed})
     # No tool returns a percentage, so any percentage is model arithmetic.
     invented += [f"{p}%" for p in PERCENT_IN_TEXT.findall(claim.explanation)]
-    bad_orders = sorted(set(ORDER_IN_TEXT.findall(claim.explanation)) - order_ids)
+    # The explanation is about impact, so it may only name orders the simulation found late.
+    bad_orders = sorted(set(ORDER_IN_TEXT.findall(claim.explanation)) - affected)
     offending = [s for s in SENTENCE.split(claim.explanation) if PERCENT_IN_TEXT.search(s)
                  or any(o in s for o in bad_orders)
                  or any((a := parse_money(m)) is not None and a not in allowed for m in MONEY_IN_TEXT.findall(s))]
     check("explanation_grounded", bool(claim.explanation) and not invented and not bad_orders,
           "empty explanation" if not claim.explanation else
-          (f"figures not in tool outputs: {invented}; unknown orders: {bad_orders}" if invented or bad_orders
+          (f"figures not in tool outputs: {invented}; orders named but not late: {bad_orders}" if invented or bad_orders
            else "every figure and order in the explanation comes from tool outputs"),
-          "rewrite the explanation without these sentences, which state figures or orders absent from the tool outputs: "
+          "rewrite the explanation without these sentences, which state figures absent from the tool outputs or name "
+          f"orders that are not late (late orders: {sorted(affected) or 'none'}): "
           + " | ".join(f'"{s.strip()}"' for s in offending) + ". Use only GBP figures copied from the tool outputs and no percentages"
           if claim.explanation else "write a 2-4 sentence explanation")
     return evaluation

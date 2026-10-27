@@ -137,6 +137,7 @@ def test_every_cited_evidence_id_is_resolved_through_get_evidence() -> None:
     ({"explanation": "Expedite costs GBP 160.00 and saves GBP 999.00."}, ["explanation_grounded"]),
     ({"explanation": "Expedite costs GBP 160.00, a 68% saving."}, ["explanation_grounded"]),
     ({"explanation": "ORD-4242 is late; expedite costs GBP 160.00."}, ["explanation_grounded"]),
+    ({"explanation": "Two orders are impacted (ORD-1001, ORD-1002). Expedite costs GBP 160.00."}, ["explanation_grounded"]),
     ({"explanation": ""}, ["explanation_grounded"]),
 ])
 def test_incorrect_or_conflicting_claims_are_flagged_then_corrected(overrides: dict, failed: list[str]) -> None:
