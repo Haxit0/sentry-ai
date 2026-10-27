@@ -23,8 +23,8 @@ The functional sponsor chain is verified locally. Final submission remains **inc
 | H-MEM provenance, recalculation, feedback and conflicts | Verified | Current amounts recalculated; only validated conclusions saved; memory/feedback details visible |
 | Matched cold/warm evaluation | Verified | [Two paired runs](evidence/memory-comparison.json); no speed advantage demonstrated; sample too small for broad claims |
 | SQLite traces, history/comparison, exports and human review | Verified | Local run storage; comparison preserves each snapshot; approval records no external action |
-| Clean setup and independent state | Verified | Separate source copy, fresh venv/npm install, backend tests and frontend build; live sponsor check with isolated H-MEM |
-| CI: Node for H-MEM and browser tests | Verified locally; remote CI pending | `.github/workflows/backend-tests.yml`; check PR status before final submission |
+| Clean setup and independent state | Verified | Committed Git archive 45232a4, fresh venv/npm install, 180 passing backend tests and frontend build; live sponsor check with isolated H-MEM |
+| CI: Node for H-MEM and browser tests | Verified | [All remote code checks passed at 45232a4](evidence/github-checks.json); final documentation commits may trigger another run |
 | Credential scan: working tree and all reachable history | Verified | [Security scan summary](evidence/security-scan.json); redacted Gitleaks scan; secret values excluded |
 | README, Track 2 description, disclosures | Verified | [README](../README.md), [description and disclosures](PROJECT_DESCRIPTION.md); Cursor unconfirmed, not claimed |
 | Eight-slide editable deck and PDF | Verified | [PPTX](../submission/Sentry_AI_Submission_Deck_Final.pptx), [PDF](../submission/Sentry_AI_Submission_Deck_Final.pdf); package/layout checks and visual PDF review |
@@ -34,10 +34,13 @@ The functional sponsor chain is verified locally. Final submission remains **inc
 | Anonymous judge-facing video/Drive links | Incomplete | Upload and test without account permissions after recording |
 | Official HackOS roster, track, repository access and final submission | Incomplete | Human confirmation and final HackOS action required |
 
+Published review: [GitHub PR #8](https://github.com/Haxit0/sentry-ai/pull/8). No merge or final HackOS submission has been performed.
+
 ## Final local verification
 
 - Backend: **180 passed, 3 opt-in live checks skipped**; live sponsor checks were run separately.
 - Browser: **21 passed** using installed Chrome; production build and typecheck passed.
+- Release confirmation after final provenance storage: [9/9 expected outcomes, 6.084s median](evidence/qwen3b-release-provenance.json), with recall on the repeated case. The deck retains the original matched model-selection comparison.
 - Acceptance calculations: [all eight cases](evidence/acceptance-cases.json).
 - Matched memory test: cold median **5.959s**, warm median **6.575s**, two pairs; recall worked but no speed gain.
 

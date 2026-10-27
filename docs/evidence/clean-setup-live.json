@@ -1,4 +1,5 @@
 {
+  "commit": "45232a4",
   "status": "validated",
   "source": "zetaris",
   "queries": 4,
@@ -12,9 +13,9 @@
       "local-runtime"
     ],
     "receipt_ids": [
-      "rcpt_req_7csde329",
-      "rcpt_req_twz8nqfe",
-      "rcpt_req_vgbehj40"
+      "rcpt_req_qjqsg8b0",
+      "rcpt_req_aij72zif",
+      "rcpt_req_c19mwlnb"
     ],
     "signed_receipts": 3,
     "calls": 3,
@@ -23,5 +24,6 @@
     "cache_hits": 0
   },
   "memory_stored": true,
-  "snapshot_hash": "430702c7a697ff45bd742a11aa2a08dd417053ef5751b24fcbae59dde0cc012c"
+  "snapshot_hash": "430702c7a697ff45bd742a11aa2a08dd417053ef5751b24fcbae59dde0cc012c",
+  "setup": "git archive HEAD; fresh venv and npm ci; isolated application memory"
 }

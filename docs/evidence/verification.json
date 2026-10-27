@@ -3,7 +3,7 @@
   "backend": {
     "passed": 180,
     "skipped": 3,
-    "note": "Final local suite; clean installation base was independently tested before the additive history-comparison case."
+    "note": "Final suite, independently repeated from committed release archive."
   },
   "browser": {
     "passed": 21,
@@ -13,10 +13,13 @@
   "clean_source": {
     "separate_venv": true,
     "separate_npm_install": true,
-    "backend_passed": 179,
+    "backend_passed": 180,
     "backend_skipped": 3,
     "build": "passed",
-    "live_packet": "clean-setup-live.json"
+    "live_packet": "clean-setup-live.json",
+    "tested_commit": "45232a4",
+    "setup": "git archive committed HEAD, fresh venv and npm ci",
+    "binary_artifact_hashes_match": true
   },
   "opt_in_skips": [
     "2 agent live tests",

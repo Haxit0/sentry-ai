@@ -7,9 +7,10 @@
     "findings": 0
   },
   "reachable_history": {
-    "commits": 9,
-    "bytes_scanned": 474405,
-    "findings": 0
+    "commits": 11,
+    "bytes_scanned": 790130,
+    "findings": 0,
+    "through_commit": "45232a4"
   },
   "redacted": true,
   "scope": "Tracked and non-ignored source files, all reachable Git history. Local private state excluded from publication. A scan is not a guarantee against every secret format."
