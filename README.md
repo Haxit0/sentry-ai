@@ -2,6 +2,12 @@
 
 Track 2: **The Agent That Can Explain Why**
 
+**Local integration preview:** this branch includes the Nightshift/H-MEM agent
+API and baseline/disrupted dashboard comparisons. Use **Run AI investigation**
+to call the configured runtime; the simulator remains deterministic and uses
+synthetic data. See [local setup and verification](docs/LOCAL_AI_PREVIEW.md).
+The original shared-baseline descriptions below refer to the simulator path.
+
 Sentry AI investigates supply-chain disruptions, estimates order impact and compares recovery strategies. This shared starter is a deterministic **synthetic-data What-If simulator**, not yet an autonomous agent. No external orders or systems are modified.
 
 Select a supplier, introduce a delay, and compare accepting the delay, expediting shipping, or buying from an alternative supplier. The application allocates inventory by promised date, calculates hypothetical late-delivery penalties, ranks recovery options and returns evidence for its recommendation.

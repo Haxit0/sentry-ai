@@ -1,5 +1,14 @@
 @import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;450;500;550;600;650;700&family=Manrope:wght@400;500;600;650;700;750;800&display=swap");
 
+.agent-panel { margin: 24px 0; padding: 24px; border: 1px solid #c5dfd8; border-radius: 16px; background: #fff; overflow-wrap: anywhere; }
+.agent-heading { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 16px; }
+.agent-panel p, .agent-panel details, .agent-panel [role="status"] { margin-top: 12px; line-height: 1.65; }
+.agent-panel .agent-scope { color: #617679; font-size: 12px; }
+.agent-report { border-top: 1px solid #e2e9e6; padding-top: 20px; margin-top: 20px; }
+.agent-panel summary { cursor: pointer; font-weight: 600; padding: 8px 0; }
+.agent-panel pre { white-space: pre-wrap; overflow-wrap: anywhere; max-height: 320px; overflow: auto; font-size: 12px; }
+.agent-error { padding: 16px; background: #fff3ed; border-radius: 10px; margin-top: 16px; }
+
 :root {
   font-family: "DM Sans", Arial, sans-serif;
   color: #243d43;

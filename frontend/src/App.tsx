@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import type { CSSProperties, FormEvent, ReactNode } from "react";
 import { request } from "./api";
 import ComparisonSummary from "./ComparisonSummary";
+import InvestigationPanel from "./InvestigationPanel";
 import { deliveryChange, runComparison } from "./comparison";
 import type { SimulationComparison } from "./comparison";
 import { date, money, strategyLabels as labels } from "./format";
@@ -393,6 +394,8 @@ function App() {
             </div>
           )}
 
+          <InvestigationPanel supplierId={supplierId} delayDays={delay} />
+
           <div aria-live="polite" aria-busy={running}>
             {comparison && result && best ? (
               <>
@@ -700,7 +703,8 @@ function App() {
                     <p>
                       {result.disclaimer} Execution mode:{" "}
                       {result.execution_mode}. Agent status:{" "}
-                      {result.agent_status}.
+                      {result.agent_status}. This status describes the calculated
+                      simulation; AI investigation results are shown separately above.
                     </p>
                   </div>
                 </section>
@@ -737,10 +741,10 @@ function App() {
           <footer className="footer">
             <p>
               <span className="footer-dot" />
-              Synthetic fixture data only. Zetaris, Meterless Nightshift,
-              Meterless Engine and NVIDIA integrations are pending.
+              Synthetic fixture data only. Simulator calculations and optional Nightshift
+              AI investigations are separate. AI requires local runtime configuration.
             </p>
-            <span>Deterministic simulator · v0.1</span>
+            <span>Simulator + AI investigation · local preview</span>
           </footer>
         </div>
       </main>

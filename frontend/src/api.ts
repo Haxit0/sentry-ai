@@ -3,12 +3,13 @@ const baseUrl = (import.meta.env.VITE_API_BASE_URL ?? "").replace(/\/$/, "");
 export async function request<T>(
   path: string,
   options: RequestInit = {},
+  timeoutMs = 15_000,
 ): Promise<T> {
   const controller = new AbortController();
   const abort = () => controller.abort();
   options.signal?.addEventListener("abort", abort, { once: true });
   if (options.signal?.aborted) controller.abort();
-  const timeout = window.setTimeout(abort, 15_000);
+  const timeout = window.setTimeout(abort, timeoutMs);
   try {
     const response = await fetch(`${baseUrl}${path}`, {
       ...options,
